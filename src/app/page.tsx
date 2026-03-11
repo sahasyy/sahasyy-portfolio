@@ -18,8 +18,15 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
     img.crossOrigin = "anonymous";
     img.onload = () => {
       const render = () => {
-        canvas.width = img.width; canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
+        const maxWidth = 1600;
+        const scale = img.width > maxWidth ? maxWidth / img.width : 1;
+        const targetW = Math.max(300, Math.round(img.width * scale));
+        const targetH = Math.max(80, Math.round(img.height * scale));
+        canvas.width = targetW;
+        canvas.height = targetH;
+        ctx.clearRect(0, 0, targetW, targetH);
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, 0, targetW, targetH);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
         const bayer = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
@@ -117,7 +124,7 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
 }
 
 const cities = [
-  { src: "/city-nyc.png" }, { src: "/city-jerseycity.png" },
+  { src: "/city-nyc-opt.png" }, { src: "/city-jerseycity.png" },
   { src: "/city-chicago.png" }, { src: "/city-mumbai.png" }, { src: "/city-dallas.png" },
 ];
 const KONAMI_CODE = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
@@ -213,7 +220,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
             <div className="modal-split-text">
               <p className="modal-body">As Research Director, I increased the project-completion rate by 25% for 80+ researchers by introducing a two-stage proposal review and weekly stand-ups — which also doubled symposium turnout. Applications jumped from 200 to 400 per semester, and we made it prestigious: only 10% were accepted.</p>
             </div>
-            <img src="/Research1.png" alt="ACM Research" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/research1-modal.jpg" alt="ACM Research" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
           <p className="modal-body">
             As Research Lead, I guided a 5-member team to a 1st-place win with NeuroVision — a hybrid CNN-GNN pipeline for EEG classification that boosted accuracy from 65% to 75% and has since been adopted by six other research teams.
@@ -248,7 +255,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
   {
     name: "NeuroVision", tag: "1st Place Best Research", tech: "Python · PyTorch · EEGNet", image: "/neurovision.png",
     modal: {
-      title: "NeuroVision", subtitle: "1st Place Best Research · ACM Research Symposium · August 2024", image: "/research2.png",
+      title: "NeuroVision", subtitle: "1st Place Best Research · ACM Research Symposium · August 2024", image: "/research2-modal.jpg",
       body: (
         <>
           <p className="modal-body">As the lead on this project, I had the privilege of guiding our team as we developed an innovative hybrid model combining Graph Convolutional Networks and Compact CNNs to analyze EEG signals. Our research focused on enhancing the accuracy and generalization of EEG-based classification, paving the way for advancements in Brain-Computer Interfaces for seizure detection and motor imagery tasks.</p>
@@ -256,7 +263,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
             <div className="modal-split-text">
               <p className="modal-body">We raised PhysioNet EEG classification accuracy from 65% to 75% while shrinking parameters by 40%. The reusable CNN-GNN pipeline has since been adopted by six other research teams. Led a 5-person team with a Git-based workflow and faculty mentorship from Dr. Jiahui Guo, delivering reproducible Jupyter notebooks.</p>
             </div>
-            <img src="/neurovision2.png" alt="NeuroVision results" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/neurovision2-modal.jpg" alt="NeuroVision results" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
         </>
       ),
@@ -271,7 +278,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
         <>
           <p className="modal-body">Remember your telehealth visits, effortlessly. Doculabubu is an AI-powered telehealth assistant that helps patients remember and understand their doctor visits through intelligent voice queries and video analysis. Ask a question, get a 12–20 second video clip with captions showing exactly where your doctor answered — no hallucinations, just video receipts.</p>
           <div className="modal-split reverse">
-            <img src="/docu.png" alt="Doculabubu demo" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/docu-modal.jpg" alt="Doculabubu demo" className="modal-split-image" loading="lazy" decoding="async" />
             <div className="modal-split-text">
               <p className="modal-body">Built with TwelveLabs Pegasus + Marengo for semantic video search, Zoom API for automatic recording fetch, Gemini for quiz synthesis, and Google Cloud TTS for care-plan read-back. Also includes a gamified teach-back mode with a 3-heart system where patients answer questions about their visit to reinforce understanding.</p>
             </div>
@@ -294,7 +301,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
               <h3 className="modal-section-title">How it works</h3>
               <p className="modal-body">Upload your transcript and answer a few goal-driven questions. CatchUp uses RAG (LangChain + GPT-4) to parse transcript PDFs via Tesseract OCR, cross-index 5 campus data sources including the UTD Nebula API, and return personalized recommendations. The Professor Playground lets you compare professors by GPA trends, sentiment analysis, and schedules — simulate different combos until you find the right taste.</p>
             </div>
-            <img src="/catchup2.png" alt="CatchUp interface" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/catchup2-modal.jpg" alt="CatchUp interface" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
         </>
       ),
@@ -309,7 +316,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
         <>
           <p className="modal-body">{"Earth2Echo empowers creators, musicians, and filmmakers to transform live celestial or visual data into evolving, controllable soundscapes — blending Gemini 2.5's multimodal capabilities with Lyria's music generation for a truly universal experience."}</p>
           <div className="modal-split reverse">
-            <img src="/e2e.png" alt="Earth2Echo demo" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/e2e-modal.jpg" alt="Earth2Echo demo" className="modal-split-image" loading="lazy" decoding="async" />
             <div className="modal-split-text">
               <p className="modal-body">{"After winning Best Use of Gemini at HackTX, we had an investor call and a meeting with the Google DeepMind team to demo the app. The project sits at the intersection of generative AI, astronomy, and creative tooling — and it was one of the most fun things I've ever built."}</p>
             </div>
@@ -322,7 +329,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
   {
     name: "SecureCheck", tag: "1st Place · Goldman Sachs", tech: "TensorFlow · Flask · DNN", image: "/securecheck.png",
     modal: {
-      title: "SecureCheck", subtitle: "1st Place · HackUNT · Goldman Sachs Track · November 2024", image: "/secure1.png",
+      title: "SecureCheck", subtitle: "1st Place · HackUNT · Goldman Sachs Track · November 2024", image: "/secure1-modal.jpg",
       body: (
         <>
           <p className="modal-body">A three-pronged approach to fraud prevention: an AI-driven detection model for credit card transactions, an interactive quiz to educate users on identifying scams, and advanced audio/text analysis for detecting fraudulent calls and messages.</p>
@@ -330,7 +337,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
             <div className="modal-split-text">
               <p className="modal-body">We trained a custom DNN on public, MIT-licensed credit card transaction data, applying state-of-the-art techniques to handle class imbalance — achieving 96% validation accuracy. Built with Flask, HTML/CSS/JS, and Python. Spooky-season themed UI included (and a corporate version for the judges).</p>
             </div>
-            <img src="/secure2.png" alt="SecureCheck" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/secure2-modal.jpg" alt="SecureCheck" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
         </>
       ),
@@ -345,7 +352,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
         <>
           <p className="modal-body">Read with confidence, grow with patience. A calm, playful reading companion designed for children with dyslexia. It combines speech recognition, micro-expression analysis, and eye-tracking to create a personalized reading experience — while empowering parents with trust and transparency through Fox Mode, a serene space offering articles, scientific studies, and model explainability.</p>
           <div className="modal-split reverse">
-            <img src="/fox2.png" alt="WhatDoesDaFoxSay interface" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/fox2-modal.jpg" alt="WhatDoesDaFoxSay interface" className="modal-split-image" loading="lazy" decoding="async" />
             <div className="modal-split-text">
               <p className="modal-body">Built with ElevenLabs for speech recognition, Gemini for adaptive feedback, MediaPipe + OpenFace for gaze and emotion detection, and Auth0 for secure family accounts. The three-layer focus funnel (paragraph → sentence → word) pinpoints exactly where comprehension breaks down. Because no child should feel slow for learning differently.</p>
             </div>
@@ -494,21 +501,58 @@ export default function Home() {
     }
   }, []);
 
-  // Warm a tiny set of known heavy drawer images during idle time
+  // Warm key interaction images during idle time to reduce first-hover/modal hitching
   useEffect(() => {
     let timeoutId: number | null = null;
     let idleId: number | null = null;
-    const warmHackUtd = () => {
-      ensureDrawerImageDecoded("/hackutd1-drawer.jpg");
-      ensureDrawerImageDecoded("/hackutd2-drawer.jpg");
+    let cancelled = false;
+    const prewarmQueue = [
+      "/hackutd1-drawer.jpg",
+      "/hackutd2-drawer.jpg",
+      "/colossal-cover.png",
+      "/hackutd-2025.png",
+      "/researchbanner.png",
+      "/sola-cover.png",
+      "/catchup.png",
+      "/doculabubu.png",
+      "/securecheck.png",
+      "/fox.png",
+      "/park.jpg",
+      "/neurovision.png",
+      "/fingerspell.jpg",
+      "/sketch.jpg",
+      "/poetry.png",
+      "/cooking1.jpg",
+      "/films.png",
+      "/research1-modal.jpg",
+      "/research2-modal.jpg",
+      "/catchup2-modal.jpg",
+      "/secure1-modal.jpg",
+      "/secure2-modal.jpg",
+      "/docu-modal.jpg",
+      "/e2e-modal.jpg",
+      "/fox2-modal.jpg",
+      "/neurovision2-modal.jpg",
+    ];
+    let index = 0;
+    const warmNext = () => {
+      if (cancelled || index >= prewarmQueue.length) return;
+      const src = prewarmQueue[index++];
+      void ensureDrawerImageDecoded(src).finally(() => {
+        if (cancelled) return;
+        if (index >= prewarmQueue.length) return;
+        if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => warmNext(), { timeout: 1600 });
+        else timeoutId = window.setTimeout(warmNext, 90);
+      });
     };
     const w = window as Window & {
       requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number;
       cancelIdleCallback?: (id: number) => void;
     };
-    if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => warmHackUtd(), { timeout: 1200 });
-    else timeoutId = window.setTimeout(warmHackUtd, 220);
+    if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => warmNext(), { timeout: 1200 });
+    else timeoutId = window.setTimeout(warmNext, 220);
     return () => {
+      cancelled = true;
       if (timeoutId !== null) window.clearTimeout(timeoutId);
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
@@ -846,7 +890,7 @@ export default function Home() {
                 <div className={`section-content ${sectionRevealed.about ? "revealed" : ""}`}>
                   <div className="about-container">
                     <div className="about-text about-text-reveal">
-                      <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.png", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.png", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.png", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jersey.png", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.png", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.png", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.png", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utdallas.png", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
+                      <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.png", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.png", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.png", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jersey.png", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.jpg", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.jpg", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.png", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utdallas.png", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
                       <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs,"}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾"); } }}> Idris and Ling</span>{", and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
                       <p className="about-monthly-quote"><span className="about-monthly-quote-label">{monthlyQuote.monthLabel}:</span>{" "}<span className={`about-monthly-quote-link ${polaroidStack.some((p) => p.key === monthlyQuote.polaroidKey) ? "about-monthly-quote-link-active" : ""}`} onClick={() => togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption); } }}>&ldquo;{monthlyQuote.text}&rdquo;</span></p>
                     </div>
@@ -873,7 +917,7 @@ export default function Home() {
             <div className="section-inner">
               <section aria-label="Work experience" className="experience-section-wrap">
                 <div className={`experience-lily ${sectionRevealed.experience ? "revealed" : ""}`} aria-hidden="true">
-                  <DitheredStill src="/lily.png" className="experience-lily-canvas" nightMode={nightMode} />
+                  <DitheredStill src="/lily-opt.png" className="experience-lily-canvas" nightMode={nightMode} />
                 </div>
                 <ScrollRevealText text="Experience" className="section-title" startSize={140} endSize={52} onProgress={handleSectionProgress("experience")} />
                 <div className={`section-content ${sectionRevealed.experience ? "revealed" : ""}`}>
