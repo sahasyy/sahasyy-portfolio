@@ -224,6 +224,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
     role: "Software Engineer Intern", org: "Colossal Biosciences", date: "January 2026 – Present", image: "/colossal-cover.jpg",
     modal: {
       title: "Colossal Biosciences", subtitle: "Software Engineer Intern · January 2026 – Present", image: "/colossal-cover.jpg",
+      preloadImages: ["/colossal-cover.jpg"],
       body: (
         <>
           <p className="modal-body">Working with some really cool tech at the intersection of biology and AI. Building a knowledge-augmented graph system, integrating LLMs into the biomedical research pipeline, and learning a ton about the space every day.</p>
@@ -262,6 +263,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
     role: "Research Director & Lead", org: "Association for Computing Machinery", date: "January 2024 – January 2026", image: "/researchbanner.png",
     modal: {
       title: "ACM Research", subtitle: "Director (Jan 2025 – Jan 2026) · Lead (May 2024 – Dec 2024)", image: "/research-banner-modal.jpg",
+      preloadImages: ["/research1-modal.jpg"],
       body: (
         <>
           <div className="modal-split">
@@ -282,6 +284,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
     role: "Co-founder", org: "Sola", date: "April 2025 – October 2025", image: "/sola-cover.png",
     modal: {
       title: "Sola", subtitle: "Co-founder · Telora Finalist · April 2025 – October 2025", image: "/sola-sahas-modal.jpg",
+      preloadImages: ["/telora-sola.png"],
       body: (
         <>
           <p className="modal-body">What started as a Google Meet turned into a flight to Miami. Telora Decision Day gathered about twenty of the sharpest student founders in one room, and I was humbled to be there — one intense day of ideas, honest feedback, and mentorship that left me more determined than ever to grow Sola into something special.</p>
@@ -304,6 +307,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "NeuroVision", tag: "1st Place Best Research", tech: "Python · PyTorch · EEGNet", image: "/neurovision-card.jpg",
     modal: {
       title: "NeuroVision", subtitle: "1st Place Best Research · ACM Research Symposium · August 2024", image: "/research2-modal.jpg",
+      preloadImages: ["/neurovision2-modal.jpg"],
       body: (
         <>
           <p className="modal-body">As the lead on this project, I had the privilege of guiding our team as we developed an innovative hybrid model combining Graph Convolutional Networks and Compact CNNs to analyze EEG signals. Our research focused on enhancing the accuracy and generalization of EEG-based classification, paving the way for advancements in Brain-Computer Interfaces for seizure detection and motor imagery tasks.</p>
@@ -322,6 +326,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "Doculabubu", tag: "1st Healthcare · 1st Video", tech: "TwelveLabs · Gemini · Flask", image: "/doculabubu-card.jpg",
     modal: {
       title: "Doculabubu", subtitle: "1st Place Best Healthcare App · 1st Place Best Video App · HackRice", image: "/doculabubu-banner-modal.jpg",
+      preloadImages: ["/docu-modal.jpg"],
       body: (
         <>
           <p className="modal-body">Remember your telehealth visits, effortlessly. Doculabubu is an AI-powered telehealth assistant that helps patients remember and understand their doctor visits through intelligent voice queries and video analysis. Ask a question, get a 12–20 second video clip with captions showing exactly where your doctor answered — no hallucinations, just video receipts.</p>
@@ -341,6 +346,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "CatchUp", tag: "Best Pitch · 3rd Overall", tech: "Flask · GPT-4 · RAG", image: "/catchup-card.jpg",
     modal: {
       title: "CatchUp", subtitle: "1st Place Best Pitch · 3rd Place Overall · 1st Place Nebula Track · HackAI · March 2025", image: "/catchup1-modal.jpg",
+      preloadImages: ["/catchup2-modal.jpg"],
       body: (
         <>
           <p className="modal-body">Get the full combo meal out of college. Too many students leave with just the burger — a degree — but miss the fries and drink. CatchUp is an AI-powered student optimization platform that helps you get the most out of your college experience: classes, clubs, labs, and professors, all wrapped into one smart, personalized combo.</p>
@@ -360,6 +366,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "Earth2Echo", tag: "Best Use of Gemini", tech: "Gemini 2.5 · Lyria · Python", image: "/earth2echo.png",
     modal: {
       title: "Earth2Echo", subtitle: "Best Use of Gemini · HackTX", image: "/e2e-banner-modal.jpg",
+      preloadImages: ["/e2e-modal.jpg"],
       body: (
         <>
           <p className="modal-body">{"Earth2Echo empowers creators, musicians, and filmmakers to transform live celestial or visual data into evolving, controllable soundscapes — blending Gemini 2.5's multimodal capabilities with Lyria's music generation for a truly universal experience."}</p>
@@ -378,6 +385,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "SecureCheck", tag: "1st Place · Goldman Sachs", tech: "TensorFlow · Flask · DNN", image: "/securecheck-card.jpg",
     modal: {
       title: "SecureCheck", subtitle: "1st Place · HackUNT · Goldman Sachs Track · November 2024", image: "/secure1-modal.jpg",
+      preloadImages: ["/secure2-modal.jpg"],
       body: (
         <>
           <p className="modal-body">A three-pronged approach to fraud prevention: an AI-driven detection model for credit card transactions, an interactive quiz to educate users on identifying scams, and advanced audio/text analysis for detecting fraudulent calls and messages.</p>
@@ -396,6 +404,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "WhatDoesDaFoxSay", tag: "Best Use of Auth0", tech: "ElevenLabs · Gemini · MediaPipe", image: "/fox-card.jpg",
     modal: {
       title: "WhatDoesDaFoxSay", subtitle: "Best Use of Auth0 Platform", image: "/fox-banner.png",
+      preloadImages: ["/fox2-modal.jpg"],
       body: (
         <>
           <p className="modal-body">Read with confidence, grow with patience. A calm, playful reading companion designed for children with dyslexia. It combines speech recognition, micro-expression analysis, and eye-tracking to create a personalized reading experience — while empowering parents with trust and transparency through Fox Mode, a serene space offering articles, scientific studies, and model explainability.</p>
@@ -427,6 +436,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingertip-card.jpg",
     modal: {
       title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip-modal.jpg",
+      preloadImages: ["/fingertip-modal.jpg"],
       body: (
         <p className="modal-body">Streamlining American Sign Language to text translation using a Conformer model. Our research explored innovative ways to enhance the efficiency and accuracy of ASL translation, leveraging cutting-edge machine learning techniques to make communication more accessible for the Deaf and Hard of Hearing community. Won first place at the ACM Research Symposium.</p>
       ),
@@ -441,6 +451,7 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
     hoverImage: "/sketch-card.jpg",
     modal: {
       title: "Art", subtitle: "Sketching, painting, and seeing differently", image: "/sketch-card.jpg",
+      preloadImages: ["/sketch-card.jpg"],
       body: (<p className="modal-body">{"Art has always been my way of slowing down. Whether it's sketching in a notebook or painting something on a canvas, it forces me to actually live in the present. I don't think of myself as an artist at all it's more like a practice. A way to stay grounded."}</p>),
       links: [],
     },
@@ -459,6 +470,7 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
     hoverImage: "/cooking1-card.jpg",
     modal: {
       title: "Cooking", subtitle: "Tasting flavors from everywhere", image: "/cooking.jpg",
+      preloadImages: ["/cooking.jpg"],
       imageClassName: "modal-image-cooking",
       body: (<p className="modal-body">{"I grew up around incredible food, my mom's cooking, Bombay street food, NYC Pizza, food adventures in Texas. Cooking is how I stay connected to all these places. I love the improvasation to it. There's something deeply satisfying about feeding people something you made."}</p>),
       links: [],
@@ -469,6 +481,7 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
     hoverImage: "/films-card.jpg",
     modal: {
       title: "Films", subtitle: "The ones that stayed with me", image: "/films-card.jpg",
+      preloadImages: ["/gotf-poster.jpg", "/surfs-up.png", "/superman.png", "/lunchbox-poster.jpg", "/cars-poster.jpg"],
       body: (
         <div className="film-list">
           <div className="film-item"><span className="film-rank">1</span><img src="/gotf-poster.jpg" alt="Grave of the Fireflies" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Grave of the Fireflies</h4><p className="film-year">1988 · Studio Ghibli</p><p className="film-desc">{"The most devastating film I've ever seen. Isao Takahata's story of two siblings trying to survive in wartime Japan isn't just an anti-war film — it's a meditation on innocence, pride, and what we lose when the world falls apart around us. I've never cried harder."}</p></div></div>
@@ -549,7 +562,12 @@ export default function Home() {
     }
   }, []);
 
-  // Warm key interaction images during idle time to reduce first-hover/modal hitching
+  const warmModalAssets = useCallback((modal: ModalData) => {
+    const targets = [modal.image, ...(modal.preloadImages ?? [])].filter(Boolean);
+    targets.forEach((src) => { void ensureDrawerImageDecoded(src); });
+  }, [ensureDrawerImageDecoded]);
+
+  // Warm only the first likely drawer interaction; other modals warm on hover/focus.
   useEffect(() => {
     let timeoutId: number | null = null;
     let idleId: number | null = null;
@@ -557,37 +575,6 @@ export default function Home() {
     const prewarmQueue = [
       "/hackutd1-drawer.jpg",
       "/hackutd2-drawer.jpg",
-      "/colossal-cover.jpg",
-      "/hackutd-2025.jpg",
-      "/researchbanner.png",
-      "/sola-cover.png",
-      "/catchup-card.jpg",
-      "/doculabubu-card.jpg",
-      "/securecheck-card.jpg",
-      "/fox-card.jpg",
-      "/park-card.jpg",
-      "/neurovision-card.jpg",
-      "/fingertip-card.jpg",
-      "/sketch-card.jpg",
-      "/poetry.png",
-      "/cooking1-card.jpg",
-      "/films-card.jpg",
-      "/research-banner-modal.jpg",
-      "/doculabubu-banner-modal.jpg",
-      "/catchup1-modal.jpg",
-      "/e2e-banner-modal.jpg",
-      "/sola-sahas-modal.jpg",
-      "/fingertip-modal.jpg",
-      "/parkguard-modal.jpg",
-      "/research1-modal.jpg",
-      "/research2-modal.jpg",
-      "/catchup2-modal.jpg",
-      "/secure1-modal.jpg",
-      "/secure2-modal.jpg",
-      "/docu-modal.jpg",
-      "/e2e-modal.jpg",
-      "/fox2-modal.jpg",
-      "/neurovision2-modal.jpg",
     ];
     let index = 0;
     const warmNext = () => {
@@ -967,7 +954,7 @@ export default function Home() {
         </div>
 
         {/* Experience */}
-        <div className="scroll-runway section-experience" id="experience">
+      <div className="scroll-runway section-experience" id="experience">
           <div className="sticky-panel">
             <div className="section-inner">
               <section aria-label="Work experience" className="experience-section-wrap">
@@ -978,7 +965,7 @@ export default function Home() {
                 <div className={`section-content ${sectionRevealed.experience ? "revealed" : ""}`}>
                   <div className="experience-grid" role="list">
                     {experiences.map((exp, i) => (
-                      <div key={i} className="experience-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(exp.modal, "experience", e)} onKeyDown={(e) => handleCardKey(e, exp.modal, "experience")} onMouseEnter={() => showCursor("View details")} onMouseLeave={hideCursor} style={{ animationDelay: `${i * 60}ms` }}>
+                      <div key={i} className="experience-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(exp.modal, "experience", e)} onKeyDown={(e) => handleCardKey(e, exp.modal, "experience")} onMouseEnter={() => { showCursor("View details"); warmModalAssets(exp.modal); }} onMouseLeave={hideCursor} onFocus={() => warmModalAssets(exp.modal)} onTouchStart={() => warmModalAssets(exp.modal)} style={{ animationDelay: `${i * 60}ms` }}>
                         <img src={exp.image} alt="" className="experience-card-bg" loading="lazy" decoding="async" />
                         <div className="experience-card-content">
                           <div className="experience-left"><span className="experience-role">{exp.role}{exp.prev && <span className="experience-prev">{" · "}{exp.prev}</span>}</span><span className="experience-org">{exp.org}</span></div>
@@ -1010,7 +997,7 @@ export default function Home() {
                     </div>
                     <div className="project-grid" role="list">
                     {projects.map((proj, i) => (
-                      <div key={i} className="project-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(proj.modal, "projects", e)} onKeyDown={(e) => handleCardKey(e, proj.modal, "projects")} onMouseEnter={() => showCursor("View project")} onMouseLeave={hideCursor} style={{ animationDelay: `${i * 50}ms` }}>
+                      <div key={i} className="project-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(proj.modal, "projects", e)} onKeyDown={(e) => handleCardKey(e, proj.modal, "projects")} onMouseEnter={() => { showCursor("View project"); warmModalAssets(proj.modal); }} onMouseLeave={hideCursor} onFocus={() => warmModalAssets(proj.modal)} onTouchStart={() => warmModalAssets(proj.modal)} style={{ animationDelay: `${i * 50}ms` }}>
                         <img src={proj.image} alt="" className="project-card-bg" loading="lazy" decoding="async" />
                         <div className="project-card-content"><span className="project-tag">{proj.tag}</span><h3 className="project-name">{proj.name}</h3><p className="project-tech">{proj.tech}</p></div>
                       </div>
@@ -1032,7 +1019,7 @@ export default function Home() {
                 <div className={`section-content ${sectionRevealed.human ? "revealed" : ""}`}>
                   <div className="human-grid" role="list">
                     {humanCards.map((item, i) => (
-                      <div key={i} className="human-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(item.modal, "human", e)} onKeyDown={(e) => handleCardKey(e, item.modal, "human")} style={{ animationDelay: `${i * 60}ms` }}>
+                      <div key={i} className="human-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(item.modal, "human", e)} onKeyDown={(e) => handleCardKey(e, item.modal, "human")} onMouseEnter={() => warmModalAssets(item.modal)} onFocus={() => warmModalAssets(item.modal)} onTouchStart={() => warmModalAssets(item.modal)} style={{ animationDelay: `${i * 60}ms` }}>
                         <img src={item.hoverImage} alt="" className="human-card-bg" loading="lazy" decoding="async" />
                         <div className="human-card-content"><span className="human-note" aria-hidden="true">{`field note ${String(i + 1).padStart(2, "0")}`}</span><h3 className="human-label">{item.label}</h3><p className="body-text">{item.text}</p></div>
                       </div>
