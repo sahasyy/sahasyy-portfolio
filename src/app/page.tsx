@@ -111,9 +111,33 @@ const KONAMI_CODE = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","Ar
 
 function getGreeting(): string {
   const hour = new Date().getHours();
-  const m = ["Rise and shine,","Top of the morning,","A brand new day,","The sun is up,","Early bird gets the worm,"];
-  const a = ["Hope your day's going well,","Afternoon vibes,","Halfway through the day,","Sun's still out,","Making the most of today,"];
-  const e = ["Winding down,","The stars are out,","Night owl hours,","Burning the midnight oil,","Hope today was kind to you,"];
+  const m = [
+    "Good morning, glad you're here,",
+    "A fresh start today,",
+    "Morning light and new ideas,",
+    "Hope your day begins gently,",
+    "Starting the day with intention,",
+    "A quiet morning hello,",
+    "New day, clear mind,",
+  ];
+  const a = [
+    "Good afternoon, thanks for stopping by,",
+    "Hope the day is treating you well,",
+    "A quick pause in the middle of the day,",
+    "Checking in while the sun is still up,",
+    "Afternoons are for steady progress,",
+    "A calm moment between meetings,",
+    "Still building, still learning,",
+  ];
+  const e = [
+    "Good evening, welcome in,",
+    "Winding down with curiosity,",
+    "Night hours, thoughtful work,",
+    "Hope your day had good moments,",
+    "A quieter time to reflect,",
+    "Late hours, honest ideas,",
+    "Thanks for ending your day here,",
+  ];
   const p = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
   if (hour < 12) return p(m); if (hour < 18) return p(a); return p(e);
 }
@@ -121,6 +145,7 @@ function getGreeting(): string {
 interface ModalData {
   title: string; subtitle: string; image: string;
   body: React.ReactNode; links: { label: string; url: string }[];
+  preloadImages?: string[];
 }
 
 interface SpotifyData { isPlaying: boolean; title?: string; artist?: string; url?: string; }
@@ -133,29 +158,35 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
       body: (
         <>
           <p className="modal-body">Working with some really cool tech at the intersection of biology and AI. Building a knowledge-augmented graph system, integrating LLMs into the biomedical research pipeline, and learning a ton about the space every day.</p>
-          <p className="modal-body">{"Can't say much more than that — NDA and all — but it's been an incredible experience so far."}</p>
         </>
       ),
-      links: [{ label: "Colossal", url: "https://colossalbiosciences.com" }],
+      links: [{ label: "Colossal", url: "https://colossal.com" }],
     },
   },
   {
-    role: "Co-founder", org: "Sola", date: "April 2025 – Present", image: "/sola-cover.png",
+    role: "sponsorships & experience", org: "HackUTD", date: "January 2025 – Present", image: "/hackutd-2025.png",
     modal: {
-      title: "Sola", subtitle: "Co-founder · Telora Finalist · April 2025 – Present", image: "/sola-sahas.png",
+      title: "HackUTD", subtitle: "sponsorships & experience · January 2025 – Present", image: "/hackutd1-drawer.jpg",
+      preloadImages: ["/hackutd1-drawer.jpg", "/hackutd2-drawer.jpg"],
       body: (
         <>
-          <p className="modal-body">What started as a Google Meet turned into a flight to Miami. Telora Decision Day gathered about twenty of the sharpest student founders in one room, and I was humbled to be there — one intense day of ideas, honest feedback, and mentorship that left me more determined than ever to grow Sola into something special.</p>
           <div className="modal-split">
+            <img src="/hackutd2-drawer.jpg" alt="HackUTD event" className="modal-split-image" loading="eager" fetchPriority="high" decoding="async" />
             <div className="modal-split-text">
-              <p className="modal-body">Sola is a semantic search engine for undergrads, grads, and PhDs — making it effortless to discover research labs, faculty advisors, papers, and funding opportunities. We shipped a full-stack MVP with React, Next.js, Firebase, LangChain, and OpenAI, indexing over 1,000 labs, clubs, and grants across universities.</p>
+              <h3 className="modal-section-title">The Tavern & Point System</h3>
+              <p className="modal-body">
+                {"I got the inspiration for the point system we ended up using at last HackUTD from Hack The North, where they turned their entire hackathon into a game with quests, rewards, and community hubs. You can "}
+                <a href="https://hackthenorth.medium.com/honk-how-goose-games-turned-hack-the-north-into-a-game-2bf222419f35" target="_blank" rel="noopener noreferrer" className="modal-inline-link">read about it here</a>.
+                {" We built The Tavern as a community hub to reward exploration, collaboration, and creative participation beyond just the final submission."}
+              </p>
             </div>
-            <img src="/telora-sola.png" alt="Sola team at Telora" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
-          <p className="modal-body">{"Leading an 8-member cross-campus team (UT Austin & Purdue) via GitHub Projects with weekly sprints. Cut merge conflicts by 35%, onboarded 50+ beta users, secured faculty pilot agreements at UT Austin and Purdue, and initiated MIT outreach. Back to work — big updates soon."}</p>
+          <p className="modal-body">
+            {"Designing technical workshops for 1,500+ hackers at America's largest first-major collegiate hackathon. Previously served as Experience Coordinator, raising project-completion 30% and satisfaction 25% through structured tutorials and hands-on support."}
+          </p>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }, { label: "Live Demo", url: "#" }],
+      links: [{ label: "HackUTD", url: "https://hackutd.co/" }],
     },
   },
   {
@@ -170,35 +201,31 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
             </div>
             <img src="/Research1.png" alt="ACM Research" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
-          <p className="modal-body">As Research Lead, I guided a 5-member team to a 1st-place win with NeuroVision — a hybrid CNN-GNN pipeline for EEG classification that boosted accuracy from 65% to 75% and has since been adopted by six other research teams.</p>
+          <p className="modal-body">
+            As Research Lead, I guided a 5-member team to a 1st-place win with NeuroVision — a hybrid CNN-GNN pipeline for EEG classification that boosted accuracy from 65% to 75% and has since been adopted by six other research teams.
+          </p>
         </>
       ),
-      links: [{ label: "ACM @ UTD", url: "#" }],
+      links: [{ label: "ACM @ UTD", url: "https://acmutd.co/research" }],
     },
   },
   {
-    role: "Industry Coordinator", prev: "prev. Experience Coordinator", org: "HackUTD", date: "January 2025 – Present", image: "/hackutd-2025.png",
+    role: "Co-founder", org: "Sola", date: "April 2025 – October 2025", image: "/sola-cover.png",
     modal: {
-      title: "HackUTD", subtitle: "Industry Coordinator · January 2025 – Present", image: "/hackutd1.png",
+      title: "Sola", subtitle: "Co-founder · Telora Finalist · April 2025 – October 2025", image: "/sola-sahas.png",
       body: (
         <>
-          <p className="modal-body">
-            {"Designing technical workshops for 1,500+ hackers at America's largest first-major collegiate hackathon. Previously served as Experience Coordinator, raising project-completion 30% and satisfaction 25% through structured tutorials and hands-on support."}
-          </p>
+          <p className="modal-body">What started as a Google Meet turned into a flight to Miami. Telora Decision Day gathered about twenty of the sharpest student founders in one room, and I was humbled to be there — one intense day of ideas, honest feedback, and mentorship that left me more determined than ever to grow Sola into something special.</p>
           <div className="modal-split">
-            <img src="/hackutd2.png" alt="HackUTD event" className="modal-split-image" loading="lazy" decoding="async" />
             <div className="modal-split-text">
-              <h3 className="modal-section-title">The Tavern & Point System</h3>
-              <p className="modal-body">
-                {"I got the inspiration for the point system we ended up using at last HackUTD from Hack The North, where they turned their entire hackathon into a game with quests, rewards, and community hubs. You can "}
-                <a href="https://hackthenorth.medium.com/honk-how-goose-games-turned-hack-the-north-into-a-game-2bf222419f35" target="_blank" rel="noopener noreferrer" className="modal-inline-link">read about it here</a>.
-                {" We built The Tavern as a community hub to reward exploration, collaboration, and creative participation beyond just the final submission."}
-              </p>
+              <p className="modal-body">Sola is a semantic search engine for undergrads, grads, and PhDs — making it effortless to discover research labs, faculty advisors, papers, and funding opportunities. We shipped a full-stack MVP with React, Next.js, Firebase, LangChain, and OpenAI, indexing over 1,000 labs, clubs, and grants across universities.</p>
             </div>
+            <img src="/telora-sola.png" alt="Sola team at Telora" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
+          <p className="modal-body">{"Leading an 8-member cross-campus team (UT Austin & Purdue) via GitHub Projects with weekly sprints. Cut merge conflicts by 35%, onboarded 50+ beta users, secured faculty pilot agreements at UT Austin and Purdue, and initiated MIT outreach. Back to work — big updates soon."}</p>
         </>
       ),
-      links: [{ label: "HackUTD", url: "#" }],
+      links: [{ label: "Site", url: "https://www.joinsola.live/" }],
     },
   },
 ];
@@ -215,11 +242,11 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
             <div className="modal-split-text">
               <p className="modal-body">We raised PhysioNet EEG classification accuracy from 65% to 75% while shrinking parameters by 40%. The reusable CNN-GNN pipeline has since been adopted by six other research teams. Led a 5-person team with a Git-based workflow and faculty mentorship from Dr. Jiahui Guo, delivering reproducible Jupyter notebooks.</p>
             </div>
-            <img src="/woody.jpg" alt="NeuroVision results" className="modal-split-image" loading="lazy" decoding="async" />
+            <img src="/neurovision2.png" alt="NeuroVision results" className="modal-split-image" loading="lazy" decoding="async" />
           </div>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }, { label: "Paper", url: "#" }],
+      links: [],
     },
   },
   {
@@ -238,7 +265,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
           <p className="modal-body">We were invited to the TwelveLabs Multimodal Seminar to demo the app to their team and community. Because no patient should have to say {"\"I forgot what my doctor told me.\""}</p>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }, { label: "Seminar Recording", url: "#" }],
+      links: [{ label: "GitHub", url: "https://github.com/ChauhanSai/hackrice25" }, { label: "Demo", url: "https://devpost.com/software/matcha-bzrgx3" }],
     },
   },
   {
@@ -257,7 +284,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
           </div>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }, { label: "Demo", url: "#" }],
+      links: [{ label: "GitHub", url: "https://github.com/sahasyy/HackAI" }, { label: "Demo", url: "https://devpost.com/software/mustard-837e9k" }],
     },
   },
   {
@@ -275,7 +302,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
           </div>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }],
+      links: [{ label: "GitHub", url: "https://github.com/emw8105/hacktx-25" }],
     },
   },
   {
@@ -293,7 +320,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
           </div>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }],
+      links: [{ label: "GitHub", url: "https://github.com/sahasyy/SecureCheck" }],
     },
   },
   {
@@ -311,37 +338,38 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
           </div>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }],
+      links: [{ label: "GitHub", url: "https://github.com/veermshah/25HackUTA" }],
     },
   },
   {
-    name: "ParkGuard", tag: "1st Place · ParkHub Track", tech: "YOLOv11 · PyTorch · OpenCV", image: "/woody.jpg",
+    name: "ParkGuard", tag: "1st Place · ParkHub Track", tech: "YOLOv11 · PyTorch · OpenCV", image: "/park.png",
     modal: {
-      title: "ParkGuard", subtitle: "1st Place · HackSMU · ParkHub Track", image: "/woody.jpg",
+      title: "ParkGuard", subtitle: "1st Place · HackSMU · ParkHub Track", image: "/parkguard.png",
       body: (
         <>
           <p className="modal-body">An AI-powered monitoring system that helps property owners find and correct ADA parking violations. Uses YOLOv11 for real-time detection of the International Symbol of Access on license plates, windows, and decals — processing at 300 fps with 3ms per frame inference, far exceeding the required 33ms threshold.</p>
           <p className="modal-body">{"Also includes a multimodal model for detecting obstructed spots and illegal parking. We created our own custom dataset combining open-source data and self-recorded footage when we couldn't find what we needed."}</p>
         </>
       ),
-      links: [{ label: "GitHub", url: "#" }],
+      links: [{ label: "GitHub", url: "https://github.com/sudocanttype/hacksmu2025" }],
     },
   },
   {
-    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/woody.jpg",
+    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell.png",
     modal: {
-      title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/woody.jpg",
+      title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip.png",
       body: (
         <p className="modal-body">Streamlining American Sign Language to text translation using a Conformer model. Our research explored innovative ways to enhance the efficiency and accuracy of ASL translation, leveraging cutting-edge machine learning techniques to make communication more accessible for the Deaf and Hard of Hearing community. Won first place at the ACM Research Symposium.</p>
       ),
-      links: [{ label: "GitHub", url: "#" }],
+      links: [],
     },
   },
 ];
 
-const humanCards: { emoji: string; label: string; text: string; modal: ModalData }[] = [
+const humanCards: { emoji: string; label: string; text: string; hoverImage: string; modal: ModalData }[] = [
   {
     emoji: "🎨", label: "Art", text: "Sketching and painting — it's how I slow down and see the world differently.",
+    hoverImage: "/sketch.png",
     modal: {
       title: "Art", subtitle: "Sketching, painting, and seeing differently", image: "/sketch.png",
       body: (<p className="modal-body">{"Art has always been my way of slowing down. Whether it's sketching in a notebook during a long flight or painting something from memory, it forces me to actually look at the world instead of just moving through it. I don't think of myself as an artist — it's more like a practice. A way to stay present."}</p>),
@@ -350,6 +378,7 @@ const humanCards: { emoji: string; label: string; text: string; modal: ModalData
   },
   {
     emoji: "✍️", label: "Poetry", text: "Writing as a way to process, reflect, and find the right words for things that don't have them.",
+    hoverImage: "/poetry.png",
     modal: {
       title: "Poetry", subtitle: "Finding words for the things that don't have them", image: "/woody.jpg",
       body: (<p className="modal-body">{"Writing poetry is how I process things I can't quite articulate in conversation. It's not about being a poet — it's about sitting with a feeling long enough to understand it. Some of the best clarity I've ever had came from trying to fit an emotion into a few honest lines."}</p>),
@@ -358,6 +387,7 @@ const humanCards: { emoji: string; label: string; text: string; modal: ModalData
   },
   {
     emoji: "🍳", label: "Cooking", text: "I cook often and love experimenting with new recipes and cuisines from around the world.",
+    hoverImage: "/cooking.png",
     modal: {
       title: "Cooking", subtitle: "Experimenting with flavors from everywhere", image: "/woody.jpg",
       body: (<p className="modal-body">{"I grew up around incredible food — Bombay street food, my mom's cooking, Jersey City diners, Dallas Tex-Mex. Cooking is how I stay connected to all those places. I love the process of it: the knife work, the timing, the improvisation. There's something deeply satisfying about feeding people something you made from scratch."}</p>),
@@ -366,15 +396,16 @@ const humanCards: { emoji: string; label: string; text: string; modal: ModalData
   },
   {
     emoji: "🎬", label: "Films", text: "A curated list of films that shaped how I see the world.",
+    hoverImage: "/films.png",
     modal: {
-      title: "Films", subtitle: "The ones that stayed with me", image: "/woody.jpg",
+      title: "Films", subtitle: "The ones that stayed with me", image: "/films.png",
       body: (
         <div className="film-list">
-          <div className="film-item"><span className="film-rank">1</span><img src="/gotf.png" alt="Grave of the Fireflies" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Grave of the Fireflies</h4><p className="film-year">1988 · Studio Ghibli</p><p className="film-desc">{"The most devastating film I've ever seen. Isao Takahata's story of two siblings trying to survive in wartime Japan isn't just an anti-war film — it's a meditation on innocence, pride, and what we lose when the world falls apart around us. I've never cried harder at any piece of art."}</p></div></div>
-          <div className="film-item"><span className="film-rank">2</span><img src="/surfs-up.png" alt="Surf's Up" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">{"Surf's Up"}</h4><p className="film-year">2007 · Sony Pictures Animation</p><p className="film-desc">{"I know what you're thinking. But hear me out — Surf's Up is a mockumentary about penguins who surf, and it has no business being as emotionally intelligent as it is. It's about finding your own reason to do the thing you love, not for the trophy. Geek Cody is my spirit animal."}</p></div></div>
-          <div className="film-item"><span className="film-rank">3</span><img src="/superman.png" alt="Superman" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Superman</h4><p className="film-year">2025 · James Gunn</p><p className="film-desc">{"James Gunn brought back the Superman I needed — sincere, hopeful, and unafraid to be corny. In a world of dark, brooding superheroes, this film reminded me that the most radical thing you can be is kind. David Corenswet nailed it, and Krypto stole every scene."}</p></div></div>
-          <div className="film-item"><span className="film-rank">4</span><img src="/woody.jpg" alt="Film 4" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Coming soon</h4><p className="film-year">TBD</p><p className="film-desc">{"Still thinking about this spot. There are too many contenders."}</p></div></div>
-          <div className="film-item"><span className="film-rank">5</span><img src="/woody.jpg" alt="Film 5" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Coming soon</h4><p className="film-year">TBD</p><p className="film-desc">{"This list is a living document. Check back later."}</p></div></div>
+          <div className="film-item"><span className="film-rank">1</span><img src="/gotf.png" alt="Grave of the Fireflies" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Grave of the Fireflies</h4><p className="film-year">1988 · Studio Ghibli</p><p className="film-desc">{"The most devastating film I've ever seen. Isao Takahata's story of two siblings trying to survive in wartime Japan isn't just an anti-war film — it's a meditation on innocence, pride, and what we lose when the world falls apart around us. I've never cried harder."}</p></div></div>
+          <div className="film-item"><span className="film-rank">2</span><img src="/surfs-up.png" alt="Surf's Up" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">{"Surf's Up"}</h4><p className="film-year">2007 · Sony Pictures Animation</p><p className="film-desc">{"I know what you're thinking. But hear me out, Surf's Up is a mockumentary about penguins who surf, and it has no business being as emotionally intelligent as it is. It's about finding your own reason to do the thing you love, not for the trophy. Cody is my spirit animal."}</p></div></div>
+          <div className="film-item"><span className="film-rank">3</span><img src="/superman.png" alt="Superman" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Superman</h4><p className="film-year">2025 · James Gunn</p><p className="film-desc">{"James Gunn brought back the Superman I needed: sincere, hopeful, and unafraid to be corny. In a world of dark, brooding superheroes, this film reminded me that the most radical thing you can be is kind. David Corenswet nailed it, and Krypto stole every scene."}</p></div></div>
+          <div className="film-item"><span className="film-rank">4</span><img src="/lunchbox.png" alt="The Lunchbox" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">The Lunchbox</h4><p className="film-year">2013 · Ritesh Batra</p><p className="film-desc">{"A quiet, deeply human Bollywood film about two lonely people who connect through letters accidentally delivered in a lunchbox. It's tender and restrained, with performances that feel intimate and real."}</p></div></div>
+          <div className="film-item"><span className="film-rank">5</span><img src="/cars.png" alt="Cars" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Cars</h4><p className="film-year">2006 · Pixar Animation Studios</p><p className="film-desc">{"Pure comfort cinema for me. I'm a sucker for nostalgia, and Cars always takes me straight back to my childhood and that early Pixar magic."}</p></div></div>
         </div>
       ),
       links: [],
@@ -393,29 +424,35 @@ const monthlyQuote = {
 export default function Home() {
   const [greeting, setGreeting] = useState("Hello,");
   const nameRef = useRef<HTMLSpanElement>(null);
-  const [gradientPos, setGradientPos] = useState({ x: 50, y: 50 });
   const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const [modalSection, setModalSection] = useState<string>("");
   const openModal = (modal: ModalData, section: string) => { setActiveModal(modal); setModalSection(section); };
   const [spotify, setSpotify] = useState<SpotifyData>({ isPlaying: false });
   const [menuOpen, setMenuOpen] = useState(false);
   const [randomCity] = useState(() => cities[Math.floor(Math.random() * cities.length)]);
-  const [cursorPos, setCursorPos] = useState({ x: 0, y: 0 });
   const [cursorVisible, setCursorVisible] = useState(false);
   const [cursorText, setCursorText] = useState("");
   const [activeSection, setActiveSection] = useState("");
-  const [scrollProgress, setScrollProgress] = useState(0);
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [nightMode, setNightMode] = useState(false);
+  const [showBuildNote, setShowBuildNote] = useState(false);
 
   const skylineRef = useRef<HTMLDivElement>(null);
   const footerEndRef = useRef<HTMLDivElement>(null);
   const drawerCloseRef = useRef<HTMLButtonElement>(null);
+  const buildNoteCloseRef = useRef<HTMLButtonElement>(null);
   const drawerTriggerRef = useRef<HTMLElement | null>(null);
   const konamiRef = useRef<string[]>([]);
   const polaroidIdRef = useRef(1);
   const cursorRafRef = useRef<number>(0);
   const cursorPendingRef = useRef<{ x: number; y: number } | null>(null);
+  const cursorLabelRef = useRef<HTMLDivElement>(null);
+  const progressFillRef = useRef<HTMLSpanElement>(null);
+  const activeSectionRef = useRef("");
+  const showBackToTopRef = useRef(false);
+  const decodedDrawerImagesRef = useRef<Set<string>>(new Set());
+  const [drawerImageReady, setDrawerImageReady] = useState(false);
+  const [drawerBodyReady, setDrawerBodyReady] = useState(false);
 
   const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; isNew: boolean }[]>([
     { id: 0, key: "base", src: "/me.png", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, isNew: true },
@@ -425,6 +462,47 @@ export default function Home() {
     const raf = window.requestAnimationFrame(() => setGreeting(getGreeting()));
     return () => window.cancelAnimationFrame(raf);
   }, []);
+
+  const ensureDrawerImageDecoded = useCallback(async (src: string) => {
+    if (!src || decodedDrawerImagesRef.current.has(src)) return;
+    const img = new Image();
+    img.decoding = "async";
+    img.src = src;
+    try {
+      if (typeof img.decode === "function") {
+        await img.decode();
+      } else {
+        await new Promise<void>((resolve) => {
+          img.onload = () => resolve();
+          img.onerror = () => resolve();
+        });
+      }
+    } catch {
+      // no-op
+    } finally {
+      decodedDrawerImagesRef.current.add(src);
+    }
+  }, []);
+
+  // Warm a tiny set of known heavy drawer images during idle time
+  useEffect(() => {
+    let timeoutId: number | null = null;
+    let idleId: number | null = null;
+    const warmHackUtd = () => {
+      ensureDrawerImageDecoded("/hackutd1-drawer.jpg");
+      ensureDrawerImageDecoded("/hackutd2-drawer.jpg");
+    };
+    const w = window as Window & {
+      requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number;
+      cancelIdleCallback?: (id: number) => void;
+    };
+    if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => warmHackUtd(), { timeout: 1200 });
+    else timeoutId = window.setTimeout(warmHackUtd, 220);
+    return () => {
+      if (timeoutId !== null) window.clearTimeout(timeoutId);
+      if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
+    };
+  }, [ensureDrawerImageDecoded]);
 
   useEffect(() => {
     const hasNew = polaroidStack.some((p) => p.isNew);
@@ -474,6 +552,7 @@ export default function Home() {
     { selector: ".section-human", color: "#f4efe6" },
     { selector: ".section-footer", color: "#f5f0e8" },
   ]);
+  const sectionElsRef = useRef<Array<{ el: HTMLElement | null; color: string }>>([]);
 
   useEffect(() => {
     if (nightMode) {
@@ -483,6 +562,14 @@ export default function Home() {
       document.body.style.transition = "background-color 1.1s ease";
     }
 
+    const resolveSectionElements = () => {
+      sectionElsRef.current = sectionColors.current.map((s) => ({
+        color: s.color,
+        el: document.querySelector(s.selector) as HTMLElement | null,
+      }));
+    };
+    resolveSectionElements();
+
     let rafId = 0;
     const tick = () => {
       rafId = 0;
@@ -491,8 +578,15 @@ export default function Home() {
       const viewMid = window.innerHeight * 0.5;
 
       // 1) Scroll progress + back-to-top
-      setScrollProgress(maxScroll > 0 ? Math.min(1, y / maxScroll) : 0);
-      setShowBackToTop(y > 560);
+      const progress = maxScroll > 0 ? Math.min(1, y / maxScroll) : 0;
+      if (progressFillRef.current) {
+        progressFillRef.current.style.transform = `scaleX(${progress})`;
+      }
+      const shouldShowBackToTop = y > 560;
+      if (showBackToTopRef.current !== shouldShowBackToTop) {
+        showBackToTopRef.current = shouldShowBackToTop;
+        setShowBackToTop(shouldShowBackToTop);
+      }
 
       // 2) Active section
       let nextSection = "";
@@ -503,13 +597,16 @@ export default function Home() {
           if (rect.top <= viewMid && rect.bottom > viewMid) nextSection = id;
         }
       }
-      setActiveSection(nextSection);
+      if (activeSectionRef.current !== nextSection) {
+        activeSectionRef.current = nextSection;
+        setActiveSection(nextSection);
+      }
 
       // 3) Scroll-driven background color
       if (!nightMode) {
-        let activeBg = sectionColors.current[0].color;
-        for (const s of sectionColors.current) {
-          const el = document.querySelector(s.selector) as HTMLElement;
+        let activeBg = sectionColors.current[0]?.color ?? "#f5f0e8";
+        for (const s of sectionElsRef.current) {
+          const el = s.el;
           if (el && el.getBoundingClientRect().top <= viewMid) activeBg = s.color;
         }
         if (activeBg !== scrollBgRef.current) {
@@ -525,15 +622,19 @@ export default function Home() {
       if (rafId) return;
       rafId = window.requestAnimationFrame(tick);
     };
+    const onResize = () => {
+      resolveSectionElements();
+      onScroll();
+    };
 
     window.addEventListener("scroll", onScroll, { passive: true });
-    window.addEventListener("resize", onScroll, { passive: true });
+    window.addEventListener("resize", onResize, { passive: true });
     onScroll(); // initial run
 
     return () => {
       if (rafId) window.cancelAnimationFrame(rafId);
       window.removeEventListener("scroll", onScroll);
-      window.removeEventListener("resize", onScroll);
+      window.removeEventListener("resize", onResize);
       document.body.style.transition = "";
     };
   }, [nightMode, getMaxScroll]);
@@ -550,8 +651,9 @@ export default function Home() {
   useEffect(() => {
     const flushCursor = () => {
       cursorRafRef.current = 0;
-      if (!cursorPendingRef.current) return;
-      setCursorPos(cursorPendingRef.current);
+      const pending = cursorPendingRef.current;
+      if (!pending || !cursorLabelRef.current) return;
+      cursorLabelRef.current.style.transform = `translate3d(${pending.x + 16}px, ${pending.y + 16}px, 0)`;
       cursorPendingRef.current = null;
     };
     const onPointerMove = (e: PointerEvent) => {
@@ -566,10 +668,54 @@ export default function Home() {
   }, []);
 
 
-  const handleMouseMove = (e: React.MouseEvent) => { if (!nameRef.current) return; const r = nameRef.current.getBoundingClientRect(); setGradientPos({ x: ((e.clientX - r.left) / r.width) * 100, y: ((e.clientY - r.top) / r.height) * 100 }); };
+  const handleMouseMove = useCallback((e: React.MouseEvent) => {
+    if (!nameRef.current) return;
+    const r = nameRef.current.getBoundingClientRect();
+    const x = ((e.clientX - r.left) / r.width) * 100;
+    const y = ((e.clientY - r.top) / r.height) * 100;
+    nameRef.current.style.backgroundPosition = `${x}% ${y}%`;
+  }, []);
   const closeModal = useCallback(() => { setActiveModal(null); setModalSection(""); if (drawerTriggerRef.current) { drawerTriggerRef.current.focus(); drawerTriggerRef.current = null; } }, []);
 
-  useEffect(() => { if (activeModal) { document.body.style.overflow = "hidden"; const timer = setTimeout(() => { drawerCloseRef.current?.focus(); }, 100); return () => { clearTimeout(timer); document.body.style.overflow = ""; }; } else { document.body.style.overflow = ""; } }, [activeModal]);
+  useEffect(() => {
+    if (!activeModal) {
+      setDrawerImageReady(false);
+      setDrawerBodyReady(false);
+      return;
+    }
+    const decodeTargets = [activeModal.image, ...(activeModal.preloadImages ?? [])].filter(Boolean);
+    const uniqueTargets = [...new Set(decodeTargets)];
+    setDrawerImageReady(false);
+    setDrawerBodyReady(false);
+    let cancelled = false;
+    Promise.all(uniqueTargets.map((src) => ensureDrawerImageDecoded(src))).then(() => {
+      if (cancelled) return;
+      setDrawerImageReady(true);
+      // let drawer animation settle first frame before heavy content paints
+      requestAnimationFrame(() => {
+        if (!cancelled) setDrawerBodyReady(true);
+      });
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [activeModal, ensureDrawerImageDecoded]);
+
+  useEffect(() => {
+    if (!activeModal && !showBuildNote) {
+      document.body.style.overflow = "";
+      return;
+    }
+    document.body.style.overflow = "hidden";
+    const timer = setTimeout(() => {
+      if (activeModal) drawerCloseRef.current?.focus();
+      else if (showBuildNote) buildNoteCloseRef.current?.focus();
+    }, 100);
+    return () => {
+      clearTimeout(timer);
+      document.body.style.overflow = "";
+    };
+  }, [activeModal, showBuildNote]);
 
   useEffect(() => {
     if (!activeModal) return;
@@ -587,6 +733,27 @@ export default function Home() {
     window.addEventListener("keydown", handleTab);
     return () => window.removeEventListener("keydown", handleTab);
   }, [activeModal, closeModal]);
+
+  useEffect(() => {
+    if (!showBuildNote) return;
+    const handleBuildNoteKeys = (e: KeyboardEvent) => {
+      if (e.key === "Escape") { setShowBuildNote(false); return; }
+      if (e.key !== "Tab") return;
+      const modal = document.querySelector(".build-note-modal.open") as HTMLElement | null;
+      if (!modal) return;
+      const focusable = modal.querySelectorAll<HTMLElement>('a[href], button:not([disabled]), textarea, input, select, [tabindex]:not([tabindex="-1"])');
+      if (focusable.length === 0) return;
+      const first = focusable[0];
+      const last = focusable[focusable.length - 1];
+      if (e.shiftKey) {
+        if (document.activeElement === first) { e.preventDefault(); last.focus(); }
+      } else {
+        if (document.activeElement === last) { e.preventDefault(); first.focus(); }
+      }
+    };
+    window.addEventListener("keydown", handleBuildNoteKeys);
+    return () => window.removeEventListener("keydown", handleBuildNoteKeys);
+  }, [showBuildNote]);
 
   const scrollTo = (id: string) => { setMenuOpen(false); const section = document.getElementById(id); if (!section) return; const sectionTop = section.getBoundingClientRect().top + window.scrollY; const runwayPadding = parseFloat(getComputedStyle(section).paddingTop) || 114; const targetTop = sectionTop + runwayPadding - 56 - 120; window.scrollTo({ top: Math.max(0, Math.min(targetTop, getMaxScroll())), behavior: "smooth" }); };
   const showCursor = (t: string) => { setCursorText(t); setCursorVisible(true); };
@@ -619,7 +786,7 @@ export default function Home() {
           </div>
         </div>
         <div className="navbar-feather" aria-hidden="true"><div className="navbar-feather-inner" /></div>
-        <div className="scroll-progress" aria-hidden="true"><span className="scroll-progress-fill" style={{ transform: `scaleX(${scrollProgress})` }} /></div>
+        <div className="scroll-progress" aria-hidden="true"><span ref={progressFillRef} className="scroll-progress-fill" /></div>
       </nav>
 
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`} role="menu" aria-hidden={!menuOpen}>
@@ -650,7 +817,7 @@ export default function Home() {
                         </span>
                       </h1>
                     </div>
-                    <div className="hero-line hero-line-2"><h1 className="hero-name" onMouseMove={handleMouseMove}>{"I'm "}<span ref={nameRef} className="gradient-name" style={{ backgroundPosition: `${gradientPos.x}% ${gradientPos.y}%` }}>Sahas Sharma.</span></h1></div>
+                    <div className="hero-line hero-line-2"><h1 className="hero-name" onMouseMove={handleMouseMove}>{"I'm "}<span ref={nameRef} className="gradient-name">Sahas Sharma.</span></h1></div>
                   </div>
                   <div className="hero-seagull" aria-hidden="true"><DitheredStill src="/seagull.png" className="hero-seagull-canvas" nightMode={nightMode} /></div>
                 </div>
@@ -670,7 +837,7 @@ export default function Home() {
                   <div className="about-container">
                     <div className="about-text about-text-reveal">
                       <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.png", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.png", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.png", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jerseycity.jpg", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.png", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.jpg", "dallas, tx"); } }}>Dallas, Texas</span>{" — I've called a lot of places home. I'm a computer science graduate student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.png", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utd.jpg", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
-                      <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs — "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-jolley.jpg", "idris & jolley 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-jolley.jpg", "idris & jolley 🐾"); } }}>Idris and Jolley</span>{" — and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
+                      <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs — "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾"); } }}>Idris and Ling</span>{" — and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
                       <p className="about-monthly-quote"><span className="about-monthly-quote-label">{monthlyQuote.monthLabel}:</span>{" "}<span className={`about-monthly-quote-link ${polaroidStack.some((p) => p.key === monthlyQuote.polaroidKey) ? "about-monthly-quote-link-active" : ""}`} onClick={() => togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption); } }}>&ldquo;{monthlyQuote.text}&rdquo;</span></p>
                     </div>
                     <div className="polaroid-wrapper polaroid-drop-reveal" aria-hidden="true">
@@ -757,7 +924,7 @@ export default function Home() {
                   <div className="human-grid" role="list">
                     {humanCards.map((item, i) => (
                       <div key={i} className="human-card" role="listitem" tabIndex={0} onClick={(e) => openModalFrom(item.modal, "human", e)} onKeyDown={(e) => handleCardKey(e, item.modal, "human")} style={{ animationDelay: `${i * 60}ms` }}>
-                        <img src="/woody.jpg" alt="" className="human-card-bg" loading="lazy" decoding="async" />
+                        <img src={item.hoverImage} alt="" className="human-card-bg" loading="lazy" decoding="async" />
                         <div className="human-card-content"><span className="human-note" aria-hidden="true">{`field note ${String(i + 1).padStart(2, "0")}`}</span><h3 className="human-label">{item.label}</h3><p className="body-text">{item.text}</p></div>
                       </div>
                     ))}
@@ -781,7 +948,20 @@ export default function Home() {
                 </div>
               </div>
               <div className="footer-right">
-                <div className="footer-links"><a href="https://github.com/sahasyy" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub</a><a href="https://www.linkedin.com/in/sahassharma/" target="_blank" rel="noopener noreferrer" className="footer-link">LinkedIn</a><a href="mailto:sahassharma19@gmail.com" className="footer-link">Email</a></div>
+                <div className="footer-links">
+                  <a href="https://github.com/sahasyy" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub</a>
+                  <button
+                    type="button"
+                    className={`footer-link footer-link-button ${showBuildNote ? "active" : ""}`}
+                    onClick={() => setShowBuildNote(true)}
+                    aria-expanded={showBuildNote}
+                    aria-controls="build-note-modal"
+                    aria-haspopup="dialog"
+                  >
+                    Build
+                  </button>
+                  <a href="mailto:sahassharma19@gmail.com" className="footer-link">Email</a>
+                </div>
                 <div className="footer-webring"><a href="https://cs.utdring.com/#sahassharma.com?nav=prev" className="webring-arrow-link" aria-label="Previous in CS Webring">←</a><a href="https://cs.utdring.com/#sahassharma.com" target="_blank" rel="noopener noreferrer" className="webring-logo-link"><img src="https://cs.utdring.com/icon.black.svg" alt="CS Webring" className="webring-logo" loading="lazy" decoding="async" /></a><a href="https://cs.utdring.com/#sahassharma.com?nav=next" className="webring-arrow-link" aria-label="Next in CS Webring">→</a></div>
               </div>
             </div>
@@ -789,6 +969,28 @@ export default function Home() {
             <div ref={footerEndRef} aria-hidden="true" />
           </footer>
         </div>
+      </div>
+
+      <div className={`build-note-modal-backdrop ${showBuildNote ? "open" : ""}`} onClick={() => setShowBuildNote(false)} aria-hidden="true" />
+      <div
+        id="build-note-modal"
+        className={`build-note-modal ${showBuildNote ? "open" : ""}`}
+        role="dialog"
+        aria-modal="true"
+        aria-labelledby="build-note-title"
+        aria-hidden={!showBuildNote}
+        onClick={() => setShowBuildNote(false)}
+      >
+        <aside className="build-note build-note-modal-card" role="note" aria-label="Build details" onClick={(e) => e.stopPropagation()}>
+          <button type="button" className="build-note-close" onClick={() => setShowBuildNote(false)} aria-label="Close build details" ref={buildNoteCloseRef}>✕</button>
+          <p className="build-note-title" id="build-note-title">Build notes</p>
+          <p className="build-note-line">This was built using TypeScript and custom CSS.</p>
+          <p className="build-note-line">Dither effect overlay on images.</p>
+          <p className="build-note-line">Colors: background #f3eee8, text #372e28, muted #6a6056, accent #a35b3c, border #c9beb2, amber focus #c98a34.</p>
+          <p className="build-note-line">Amber theme.</p>
+          <p className="build-note-line">Fonts: Neco and Architekt.</p>
+          <p className="build-note-line">Last updated March 10, 2026.</p>
+        </aside>
       </div>
 
       {/* Drawer */}
@@ -801,10 +1003,16 @@ export default function Home() {
         </div>
         {activeModal && (
           <div className="drawer-body">
-            <img src={activeModal.image} alt="" className="modal-image" loading="lazy" decoding="async" />
+            <img
+              src={activeModal.image}
+              alt=""
+              className={`modal-image ${drawerImageReady ? "ready" : "pending"}`}
+              loading="eager"
+              decoding="async"
+            />
             <h2 className="modal-title" id="drawer-title">{activeModal.title}</h2>
             <p className="modal-subtitle">{activeModal.subtitle}</p>
-            {activeModal.body}
+            {drawerBodyReady ? activeModal.body : <div className="drawer-body-placeholder" aria-hidden="true" />}
             {activeModal.links.length > 0 && (
               <div className="modal-links">
                 {activeModal.links.map((l, i) => (
@@ -816,7 +1024,7 @@ export default function Home() {
         )}
       </div>
 
-      <div className={`cursor-label ${cursorVisible ? "visible" : ""}`} style={{ left: cursorPos.x, top: cursorPos.y }} aria-hidden="true">{cursorText}</div>
+      <div ref={cursorLabelRef} className={`cursor-label ${cursorVisible ? "visible" : ""}`} aria-hidden="true">{cursorText}</div>
       <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top">Back to top</button>
 
       <NightMode active={nightMode} />
