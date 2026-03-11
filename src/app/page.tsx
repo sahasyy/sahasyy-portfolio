@@ -6,8 +6,32 @@ import ScrollRevealText from "./ScrollRevealText";
 
 
 function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean }) {
+  const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [shouldRender, setShouldRender] = useState(false);
+
   useEffect(() => {
+    const el = wrapperRef.current;
+    if (!el) return;
+    if (typeof window === "undefined" || typeof window.IntersectionObserver === "undefined") {
+      setShouldRender(true);
+      return;
+    }
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldRender(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin: "520px 0px" },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, []);
+
+  useEffect(() => {
+    if (!shouldRender) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -56,13 +80,37 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
       const w = window as Window & { cancelIdleCallback?: (id: number) => void };
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
-  }, [src, nightMode]);
-  return <div className="city-skyline-wrapper"><canvas ref={canvasRef} className="city-skyline" /></div>;
+  }, [src, nightMode, shouldRender]);
+  return <div className="city-skyline-wrapper" ref={wrapperRef}><canvas ref={canvasRef} className="city-skyline" /></div>;
 }
 
 function DitheredStill({ src, className, nightMode }: { src: string; className?: string; nightMode?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
+  const [shouldRender, setShouldRender] = useState(false);
+
   useEffect(() => {
+    const el = canvasRef.current;
+    if (!el) return;
+    if (typeof window === "undefined" || typeof window.IntersectionObserver === "undefined") {
+      setShouldRender(true);
+      return;
+    }
+    const rootMargin = className?.includes("hero-seagull") ? "260px 0px" : "420px 0px";
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries.some((entry) => entry.isIntersecting)) {
+          setShouldRender(true);
+          observer.disconnect();
+        }
+      },
+      { rootMargin },
+    );
+    observer.observe(el);
+    return () => observer.disconnect();
+  }, [className]);
+
+  useEffect(() => {
+    if (!shouldRender) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
     const ctx = canvas.getContext("2d");
@@ -119,7 +167,7 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
       const w = window as Window & { cancelIdleCallback?: (id: number) => void };
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
-  }, [src, nightMode]);
+  }, [src, nightMode, className, shouldRender]);
   return <canvas ref={canvasRef} className={className} />;
 }
 
@@ -173,9 +221,9 @@ interface SpotifyData { isPlaying: boolean; title?: string; artist?: string; url
 
 const experiences: { role: string; prev?: string; org: string; date: string; image: string; modal: ModalData; }[] = [
   {
-    role: "Software Engineer Intern", org: "Colossal Biosciences", date: "January 2026 – Present", image: "/colossal-cover.png",
+    role: "Software Engineer Intern", org: "Colossal Biosciences", date: "January 2026 – Present", image: "/colossal-cover.jpg",
     modal: {
-      title: "Colossal Biosciences", subtitle: "Software Engineer Intern · January 2026 – Present", image: "/colossal-cover.png",
+      title: "Colossal Biosciences", subtitle: "Software Engineer Intern · January 2026 – Present", image: "/colossal-cover.jpg",
       body: (
         <>
           <p className="modal-body">Working with some really cool tech at the intersection of biology and AI. Building a knowledge-augmented graph system, integrating LLMs into the biomedical research pipeline, and learning a ton about the space every day.</p>
@@ -185,7 +233,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
     },
   },
   {
-    role: "sponsorships & experience", org: "HackUTD", date: "January 2025 – Present", image: "/hackutd-2025.png",
+    role: "sponsorships & experience", org: "HackUTD", date: "January 2025 – Present", image: "/hackutd-2025.jpg",
     modal: {
       title: "HackUTD", subtitle: "sponsorships & experience · January 2025 – Present", image: "/hackutd1-drawer.jpg",
       preloadImages: ["/hackutd1-drawer.jpg", "/hackutd2-drawer.jpg"],
@@ -213,7 +261,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
   {
     role: "Research Director & Lead", org: "Association for Computing Machinery", date: "January 2024 – January 2026", image: "/researchbanner.png",
     modal: {
-      title: "ACM Research", subtitle: "Director (Jan 2025 – Jan 2026) · Lead (May 2024 – Dec 2024)", image: "/research-banner.png",
+      title: "ACM Research", subtitle: "Director (Jan 2025 – Jan 2026) · Lead (May 2024 – Dec 2024)", image: "/research-banner-modal.jpg",
       body: (
         <>
           <div className="modal-split">
@@ -233,7 +281,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
   {
     role: "Co-founder", org: "Sola", date: "April 2025 – October 2025", image: "/sola-cover.png",
     modal: {
-      title: "Sola", subtitle: "Co-founder · Telora Finalist · April 2025 – October 2025", image: "/sola-sahas.png",
+      title: "Sola", subtitle: "Co-founder · Telora Finalist · April 2025 – October 2025", image: "/sola-sahas-modal.jpg",
       body: (
         <>
           <p className="modal-body">What started as a Google Meet turned into a flight to Miami. Telora Decision Day gathered about twenty of the sharpest student founders in one room, and I was humbled to be there — one intense day of ideas, honest feedback, and mentorship that left me more determined than ever to grow Sola into something special.</p>
@@ -253,7 +301,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
 
 const projects: { name: string; tag: string; tech: string; image: string; modal: ModalData; }[] = [
   {
-    name: "NeuroVision", tag: "1st Place Best Research", tech: "Python · PyTorch · EEGNet", image: "/neurovision.png",
+    name: "NeuroVision", tag: "1st Place Best Research", tech: "Python · PyTorch · EEGNet", image: "/neurovision-card.jpg",
     modal: {
       title: "NeuroVision", subtitle: "1st Place Best Research · ACM Research Symposium · August 2024", image: "/research2-modal.jpg",
       body: (
@@ -271,9 +319,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "Doculabubu", tag: "1st Healthcare · 1st Video", tech: "TwelveLabs · Gemini · Flask", image: "/doculabubu.png",
+    name: "Doculabubu", tag: "1st Healthcare · 1st Video", tech: "TwelveLabs · Gemini · Flask", image: "/doculabubu-card.jpg",
     modal: {
-      title: "Doculabubu", subtitle: "1st Place Best Healthcare App · 1st Place Best Video App · HackRice", image: "/doculabubu-banner.png",
+      title: "Doculabubu", subtitle: "1st Place Best Healthcare App · 1st Place Best Video App · HackRice", image: "/doculabubu-banner-modal.jpg",
       body: (
         <>
           <p className="modal-body">Remember your telehealth visits, effortlessly. Doculabubu is an AI-powered telehealth assistant that helps patients remember and understand their doctor visits through intelligent voice queries and video analysis. Ask a question, get a 12–20 second video clip with captions showing exactly where your doctor answered — no hallucinations, just video receipts.</p>
@@ -290,9 +338,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "CatchUp", tag: "Best Pitch · 3rd Overall", tech: "Flask · GPT-4 · RAG", image: "/catchup.png",
+    name: "CatchUp", tag: "Best Pitch · 3rd Overall", tech: "Flask · GPT-4 · RAG", image: "/catchup-card.jpg",
     modal: {
-      title: "CatchUp", subtitle: "1st Place Best Pitch · 3rd Place Overall · 1st Place Nebula Track · HackAI · March 2025", image: "/catchup1.png",
+      title: "CatchUp", subtitle: "1st Place Best Pitch · 3rd Place Overall · 1st Place Nebula Track · HackAI · March 2025", image: "/catchup1-modal.jpg",
       body: (
         <>
           <p className="modal-body">Get the full combo meal out of college. Too many students leave with just the burger — a degree — but miss the fries and drink. CatchUp is an AI-powered student optimization platform that helps you get the most out of your college experience: classes, clubs, labs, and professors, all wrapped into one smart, personalized combo.</p>
@@ -311,7 +359,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
   {
     name: "Earth2Echo", tag: "Best Use of Gemini", tech: "Gemini 2.5 · Lyria · Python", image: "/earth2echo.png",
     modal: {
-      title: "Earth2Echo", subtitle: "Best Use of Gemini · HackTX", image: "/e2e-banner.png",
+      title: "Earth2Echo", subtitle: "Best Use of Gemini · HackTX", image: "/e2e-banner-modal.jpg",
       body: (
         <>
           <p className="modal-body">{"Earth2Echo empowers creators, musicians, and filmmakers to transform live celestial or visual data into evolving, controllable soundscapes — blending Gemini 2.5's multimodal capabilities with Lyria's music generation for a truly universal experience."}</p>
@@ -327,7 +375,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "SecureCheck", tag: "1st Place · Goldman Sachs", tech: "TensorFlow · Flask · DNN", image: "/securecheck.png",
+    name: "SecureCheck", tag: "1st Place · Goldman Sachs", tech: "TensorFlow · Flask · DNN", image: "/securecheck-card.jpg",
     modal: {
       title: "SecureCheck", subtitle: "1st Place · HackUNT · Goldman Sachs Track · November 2024", image: "/secure1-modal.jpg",
       body: (
@@ -345,7 +393,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "WhatDoesDaFoxSay", tag: "Best Use of Auth0", tech: "ElevenLabs · Gemini · MediaPipe", image: "/fox.png",
+    name: "WhatDoesDaFoxSay", tag: "Best Use of Auth0", tech: "ElevenLabs · Gemini · MediaPipe", image: "/fox-card.jpg",
     modal: {
       title: "WhatDoesDaFoxSay", subtitle: "Best Use of Auth0 Platform", image: "/fox-banner.png",
       body: (
@@ -363,9 +411,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "ParkGuard", tag: "1st Place · ParkHub Track", tech: "YOLOv11 · PyTorch · OpenCV", image: "/park.jpg",
+    name: "ParkGuard", tag: "1st Place · ParkHub Track", tech: "YOLOv11 · PyTorch · OpenCV", image: "/park-card.jpg",
     modal: {
-      title: "ParkGuard", subtitle: "1st Place · HackSMU · ParkHub Track", image: "/parkguard.png",
+      title: "ParkGuard", subtitle: "1st Place · HackSMU · ParkHub Track", image: "/parkguard-modal.jpg",
       body: (
         <>
           <p className="modal-body">An AI-powered monitoring system that helps property owners find and correct ADA parking violations. Uses YOLOv11 for real-time detection of the International Symbol of Access on license plates, windows, and decals — processing at 300 fps with 3ms per frame inference, far exceeding the required 33ms threshold.</p>
@@ -376,9 +424,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell.jpg",
+    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingertip-card.jpg",
     modal: {
-      title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip.jpg",
+      title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip-modal.jpg",
       body: (
         <p className="modal-body">Streamlining American Sign Language to text translation using a Conformer model. Our research explored innovative ways to enhance the efficiency and accuracy of ASL translation, leveraging cutting-edge machine learning techniques to make communication more accessible for the Deaf and Hard of Hearing community. Won first place at the ACM Research Symposium.</p>
       ),
@@ -390,9 +438,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
 const humanCards: { emoji: string; label: string; text: string; hoverImage: string; modal: ModalData }[] = [
   {
     emoji: "🎨", label: "Art", text: "How I slow down and see the world differently.",
-    hoverImage: "/sketch.jpg",
+    hoverImage: "/sketch-card.jpg",
     modal: {
-      title: "Art", subtitle: "Sketching, painting, and seeing differently", image: "/sketch.jpg",
+      title: "Art", subtitle: "Sketching, painting, and seeing differently", image: "/sketch-card.jpg",
       body: (<p className="modal-body">{"Art has always been my way of slowing down. Whether it's sketching in a notebook or painting something on a canvas, it forces me to actually live in the present. I don't think of myself as an artist at all it's more like a practice. A way to stay grounded."}</p>),
       links: [],
     },
@@ -408,7 +456,7 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
   },
   {
     emoji: "🍳", label: "Cooking", text: "I love trying new recipes and cuisines from around the world.",
-    hoverImage: "/cooking1.jpg",
+    hoverImage: "/cooking1-card.jpg",
     modal: {
       title: "Cooking", subtitle: "Tasting flavors from everywhere", image: "/cooking.jpg",
       imageClassName: "modal-image-cooking",
@@ -418,16 +466,16 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
   },
   {
     emoji: "🎬", label: "Films", text: "A curated list of films that shaped how I see the world.",
-    hoverImage: "/films.png",
+    hoverImage: "/films-card.jpg",
     modal: {
-      title: "Films", subtitle: "The ones that stayed with me", image: "/films.png",
+      title: "Films", subtitle: "The ones that stayed with me", image: "/films-card.jpg",
       body: (
         <div className="film-list">
-          <div className="film-item"><span className="film-rank">1</span><img src="/gotf.png" alt="Grave of the Fireflies" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Grave of the Fireflies</h4><p className="film-year">1988 · Studio Ghibli</p><p className="film-desc">{"The most devastating film I've ever seen. Isao Takahata's story of two siblings trying to survive in wartime Japan isn't just an anti-war film — it's a meditation on innocence, pride, and what we lose when the world falls apart around us. I've never cried harder."}</p></div></div>
+          <div className="film-item"><span className="film-rank">1</span><img src="/gotf-poster.jpg" alt="Grave of the Fireflies" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Grave of the Fireflies</h4><p className="film-year">1988 · Studio Ghibli</p><p className="film-desc">{"The most devastating film I've ever seen. Isao Takahata's story of two siblings trying to survive in wartime Japan isn't just an anti-war film — it's a meditation on innocence, pride, and what we lose when the world falls apart around us. I've never cried harder."}</p></div></div>
           <div className="film-item"><span className="film-rank">2</span><img src="/surfs-up.png" alt="Surf's Up" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">{"Surf's Up"}</h4><p className="film-year">2007 · Sony Pictures Animation</p><p className="film-desc">{"I know what you're thinking. But hear me out, Surf's Up is a mockumentary about penguins who surf, and it has no business being as emotionally intelligent as it is. It's about finding your own reason to do the thing you love, not for the trophy. Cody is my spirit animal."}</p></div></div>
           <div className="film-item"><span className="film-rank">3</span><img src="/superman.png" alt="Superman" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Superman</h4><p className="film-year">2025 · James Gunn</p><p className="film-desc">{"James Gunn brought back the Superman I needed: sincere, hopeful, and unafraid to be corny. In a world of dark, brooding superheroes, this film reminded me that the most radical thing you can be is kind. David Corenswet nailed it, and Krypto stole every scene."}</p></div></div>
-          <div className="film-item"><span className="film-rank">4</span><img src="/lunchbox.png" alt="The Lunchbox" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">The Lunchbox</h4><p className="film-year">2013 · Ritesh Batra</p><p className="film-desc">{"A quiet, deeply human Bollywood film about two lonely people who connect through letters accidentally delivered in a lunchbox. It's tender and restrained, with performances that feel intimate and real."}</p></div></div>
-          <div className="film-item"><span className="film-rank">5</span><img src="/cars.png" alt="Cars" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Cars</h4><p className="film-year">2006 · Pixar Animation Studios</p><p className="film-desc">{"Pure comfort cinema for me. I'm a sucker for nostalgia, and Cars always takes me straight back to my childhood and that early Pixar magic."}</p></div></div>
+          <div className="film-item"><span className="film-rank">4</span><img src="/lunchbox-poster.jpg" alt="The Lunchbox" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">The Lunchbox</h4><p className="film-year">2013 · Ritesh Batra</p><p className="film-desc">{"A quiet, deeply human Bollywood film about two lonely people who connect through letters accidentally delivered in a lunchbox. It's tender and restrained, with performances that feel intimate and real."}</p></div></div>
+          <div className="film-item"><span className="film-rank">5</span><img src="/cars-poster.jpg" alt="Cars" className="film-poster" loading="lazy" decoding="async" /><div className="film-info"><h4 className="film-title-text">Cars</h4><p className="film-year">2006 · Pixar Animation Studios</p><p className="film-desc">{"Pure comfort cinema for me. I'm a sucker for nostalgia, and Cars always takes me straight back to my childhood and that early Pixar magic."}</p></div></div>
         </div>
       ),
       links: [],
@@ -439,7 +487,7 @@ const monthlyQuote = {
   monthLabel: "February 2026",
   text: "Ultimately, i must be brave",
   polaroidKey: "quote-feb-2026",
-  polaroidSrc: "/punch.png",
+  polaroidSrc: "/punch.jpg",
   polaroidCaption: "resiliant like punch",
 };
 
@@ -477,7 +525,7 @@ export default function Home() {
   const [drawerBodyReady, setDrawerBodyReady] = useState(false);
 
   const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; isNew: boolean }[]>([
-    { id: 0, key: "base", src: "/me.png", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, isNew: true },
+    { id: 0, key: "base", src: "/me.jpg", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, isNew: true },
   ]);
 
   const ensureDrawerImageDecoded = useCallback(async (src: string) => {
@@ -509,21 +557,28 @@ export default function Home() {
     const prewarmQueue = [
       "/hackutd1-drawer.jpg",
       "/hackutd2-drawer.jpg",
-      "/colossal-cover.png",
-      "/hackutd-2025.png",
+      "/colossal-cover.jpg",
+      "/hackutd-2025.jpg",
       "/researchbanner.png",
       "/sola-cover.png",
-      "/catchup.png",
-      "/doculabubu.png",
-      "/securecheck.png",
-      "/fox.png",
-      "/park.jpg",
-      "/neurovision.png",
-      "/fingerspell.jpg",
-      "/sketch.jpg",
+      "/catchup-card.jpg",
+      "/doculabubu-card.jpg",
+      "/securecheck-card.jpg",
+      "/fox-card.jpg",
+      "/park-card.jpg",
+      "/neurovision-card.jpg",
+      "/fingertip-card.jpg",
+      "/sketch-card.jpg",
       "/poetry.png",
-      "/cooking1.jpg",
-      "/films.png",
+      "/cooking1-card.jpg",
+      "/films-card.jpg",
+      "/research-banner-modal.jpg",
+      "/doculabubu-banner-modal.jpg",
+      "/catchup1-modal.jpg",
+      "/e2e-banner-modal.jpg",
+      "/sola-sahas-modal.jpg",
+      "/fingertip-modal.jpg",
+      "/parkguard-modal.jpg",
       "/research1-modal.jpg",
       "/research2-modal.jpg",
       "/catchup2-modal.jpg",
@@ -826,7 +881,7 @@ export default function Home() {
         <div className="navbar-bar">
           <div className="navbar-inner">
             <a href="#top" className="navbar-name" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-              <img src="/hirono.png" alt="Sahas Sharma — home" style={{ height: "28px", width: "auto", display: "block" }} />
+              <img src="/hirono-nav.png" alt="Sahas Sharma — home" style={{ height: "28px", width: "auto", display: "block" }} />
             </a>
             <div className="navbar-links" role="list">
               <button role="listitem" className={`navbar-link ${activeSection === "experience" ? "active" : ""}`} onClick={() => scrollTo("experience")}>Experience</button>
@@ -890,8 +945,8 @@ export default function Home() {
                 <div className={`section-content ${sectionRevealed.about ? "revealed" : ""}`}>
                   <div className="about-container">
                     <div className="about-text about-text-reveal">
-                      <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.png", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.png", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.png", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jersey.png", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.jpg", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.jpg", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.png", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utdallas.png", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
-                      <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs,"}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾"); } }}> Idris and Ling</span>{", and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
+                      <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.jpg", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.jpg", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.jpg", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jersey.jpg", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.jpg", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.jpg", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.jpg", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utdallas.jpg", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
+                      <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs,"}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.jpg", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.jpg", "idris & ling 🐾"); } }}> Idris and Ling</span>{", and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
                       <p className="about-monthly-quote"><span className="about-monthly-quote-label">{monthlyQuote.monthLabel}:</span>{" "}<span className={`about-monthly-quote-link ${polaroidStack.some((p) => p.key === monthlyQuote.polaroidKey) ? "about-monthly-quote-link-active" : ""}`} onClick={() => togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption); } }}>&ldquo;{monthlyQuote.text}&rdquo;</span></p>
                     </div>
                     <div className="polaroid-wrapper polaroid-drop-reveal" aria-hidden="true">
@@ -917,7 +972,7 @@ export default function Home() {
             <div className="section-inner">
               <section aria-label="Work experience" className="experience-section-wrap">
                 <div className={`experience-lily ${sectionRevealed.experience ? "revealed" : ""}`} aria-hidden="true">
-                  <DitheredStill src="/lily-opt.png" className="experience-lily-canvas" nightMode={nightMode} />
+                  <DitheredStill src="/lily-lite.png" className="experience-lily-canvas" nightMode={nightMode} />
                 </div>
                 <ScrollRevealText text="Experience" className="section-title" startSize={140} endSize={52} onProgress={handleSectionProgress("experience")} />
                 <div className={`section-content ${sectionRevealed.experience ? "revealed" : ""}`}>
