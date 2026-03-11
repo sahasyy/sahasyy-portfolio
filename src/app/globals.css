@@ -115,29 +115,34 @@ a:hover { opacity: 0.6; }
 .navbar {
   position: fixed; top: 0; left: 0; width: 100%; z-index: 500;
   display: flex; flex-direction: column;
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
   transition: transform 0.35s var(--ease-out-expo);
-  will-change: transform;
+  transform: none;
 }
 .navbar.navbar-hidden {
-  transform: translate3d(0, -100%, 0);
+  transform: translateY(-100%);
 }
 
 .navbar-bar {
   position: relative;
   z-index: 2;
-  background: rgba(245, 240, 232, 0.72);
-  backdrop-filter: blur(40px) saturate(180%) brightness(1.04);
-  -webkit-backdrop-filter: blur(40px) saturate(180%) brightness(1.04);
+  isolation: isolate;
+  overflow: hidden;
+  background: rgba(245, 240, 232, 0.2);
   border-bottom: 1px solid rgba(196, 192, 185, 0.55);
   box-shadow:
     0 1px 0 rgba(255, 255, 255, 0.65) inset,
     0 4px 16px rgba(0, 0, 0, 0.05);
-  transform: translate3d(0, 0, 0);
-  -webkit-backface-visibility: hidden;
-  backface-visibility: hidden;
+}
+
+.navbar-bar::before {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  background: rgba(245, 240, 232, 0.68);
+  backdrop-filter: blur(42px) saturate(180%) brightness(1.04);
+  -webkit-backdrop-filter: blur(42px) saturate(180%) brightness(1.04);
+  z-index: 0;
 }
 
 .navbar-bar::after {
@@ -149,7 +154,7 @@ a:hover { opacity: 0.6; }
   background-size: 4px 4px;
   mix-blend-mode: multiply;
   opacity: 0.32;
-  z-index: 0;
+  z-index: 1;
 }
 
 .navbar-feather {
@@ -191,6 +196,9 @@ a:hover { opacity: 0.6; }
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .navbar-bar {
     background: rgba(245, 240, 232, 0.97);
+  }
+  .navbar-bar::before {
+    display: none;
   }
 }
 
@@ -978,11 +986,12 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 .night-mode-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0; pointer-events: none; }
 
 body.night-mode { background-color: #1a1a1a; background-image: linear-gradient(45deg, rgba(247, 245, 242, 0.018) 25%, transparent 25%, transparent 75%, rgba(247, 245, 242, 0.018) 75%), linear-gradient(45deg, rgba(247, 245, 242, 0.018) 25%, transparent 25%, transparent 75%, rgba(247, 245, 242, 0.018) 75%); background-size: 4px 4px; background-position: 0 0, 2px 2px; color: #f7f5f2; transition: background-color 0.6s ease, color 0.6s ease; }
-body.night-mode .navbar-bar { background: rgba(26, 26, 26, 0.72); backdrop-filter: blur(40px) saturate(180%); -webkit-backdrop-filter: blur(40px) saturate(180%); border-bottom: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 16px rgba(0, 0, 0, 0.2); }
+body.night-mode .navbar-bar { background: rgba(26, 26, 26, 0.2); border-bottom: 1px solid rgba(255, 255, 255, 0.1); box-shadow: 0 1px 0 rgba(255,255,255,0.06) inset, 0 4px 16px rgba(0, 0, 0, 0.2); }
+body.night-mode .navbar-bar::before { background: rgba(26, 26, 26, 0.68); backdrop-filter: blur(42px) saturate(180%); -webkit-backdrop-filter: blur(42px) saturate(180%); }
 body.night-mode .navbar-bar::after { background-image: radial-gradient(circle at 1px 1px, rgba(247, 245, 242, 0.18) 0.95px, transparent 1px); mix-blend-mode: screen; opacity: 0.28; }
 body.night-mode .scroll-progress { background: rgba(247, 245, 242, 0.12); }
 body.night-mode .scroll-progress-fill { background: linear-gradient(90deg, #c98a34 0%, #e0a14b 100%); }
-@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { body.night-mode .navbar-bar { background: rgba(26, 26, 26, 0.97); } }
+@supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) { body.night-mode .navbar-bar { background: rgba(26, 26, 26, 0.97); } body.night-mode .navbar-bar::before { display: none; } }
 body.night-mode .navbar-name, body.night-mode .navbar-link, body.night-mode .mobile-menu-link { color: #f7f5f2; }
 body.night-mode .navbar-link { border-color: rgba(200, 200, 200, 0.3); background: rgba(255, 255, 255, 0.08); }
 body.night-mode .navbar-link:hover, body.night-mode .navbar-link.active { border-color: #f7f5f2; background: rgba(255, 255, 255, 0.16); }

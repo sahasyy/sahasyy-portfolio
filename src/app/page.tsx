@@ -66,9 +66,22 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
     img.crossOrigin = "anonymous";
     img.onload = () => {
       const render = () => {
-        canvas.width = img.width;
-        canvas.height = img.height;
-        ctx.drawImage(img, 0, 0);
+        const maxRenderSide = className?.includes("experience-lily")
+          ? 900
+          : className?.includes("projects-dino")
+            ? 920
+            : className?.includes("hero-seagull")
+              ? 860
+              : 1200;
+        const longestSide = Math.max(img.width, img.height);
+        const scale = longestSide > maxRenderSide ? maxRenderSide / longestSide : 1;
+        const targetW = Math.max(64, Math.round(img.width * scale));
+        const targetH = Math.max(64, Math.round(img.height * scale));
+        canvas.width = targetW;
+        canvas.height = targetH;
+        ctx.clearRect(0, 0, targetW, targetH);
+        ctx.imageSmoothingEnabled = true;
+        ctx.drawImage(img, 0, 0, targetW, targetH);
         const imageData = ctx.getImageData(0, 0, canvas.width, canvas.height);
         const data = imageData.data;
         const bayer = [[0,8,2,10],[12,4,14,6],[3,11,1,9],[15,7,13,5]];
@@ -343,7 +356,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "ParkGuard", tag: "1st Place · ParkHub Track", tech: "YOLOv11 · PyTorch · OpenCV", image: "/park.png",
+    name: "ParkGuard", tag: "1st Place · ParkHub Track", tech: "YOLOv11 · PyTorch · OpenCV", image: "/park.jpg",
     modal: {
       title: "ParkGuard", subtitle: "1st Place · HackSMU · ParkHub Track", image: "/parkguard.png",
       body: (
@@ -356,9 +369,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell.png",
+    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell.jpg",
     modal: {
-      title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip.png",
+      title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip.jpg",
       body: (
         <p className="modal-body">Streamlining American Sign Language to text translation using a Conformer model. Our research explored innovative ways to enhance the efficiency and accuracy of ASL translation, leveraging cutting-edge machine learning techniques to make communication more accessible for the Deaf and Hard of Hearing community. Won first place at the ACM Research Symposium.</p>
       ),
@@ -370,9 +383,9 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
 const humanCards: { emoji: string; label: string; text: string; hoverImage: string; modal: ModalData }[] = [
   {
     emoji: "🎨", label: "Art", text: "How I slow down and see the world differently.",
-    hoverImage: "/sketch.png",
+    hoverImage: "/sketch.jpg",
     modal: {
-      title: "Art", subtitle: "Sketching, painting, and seeing differently", image: "/sketch.png",
+      title: "Art", subtitle: "Sketching, painting, and seeing differently", image: "/sketch.jpg",
       body: (<p className="modal-body">{"Art has always been my way of slowing down. Whether it's sketching in a notebook or painting something on a canvas, it forces me to actually live in the present. I don't think of myself as an artist at all it's more like a practice. A way to stay grounded."}</p>),
       links: [],
     },
@@ -388,9 +401,9 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
   },
   {
     emoji: "🍳", label: "Cooking", text: "I love trying new recipes and cuisines from around the world.",
-    hoverImage: "/cooking1.png",
+    hoverImage: "/cooking1.jpg",
     modal: {
-      title: "Cooking", subtitle: "Tasting flavors from everywhere", image: "/cooking.png",
+      title: "Cooking", subtitle: "Tasting flavors from everywhere", image: "/cooking.jpg",
       imageClassName: "modal-image-cooking",
       body: (<p className="modal-body">{"I grew up around incredible food, my mom's cooking, Bombay street food, NYC Pizza, food adventures in Texas. Cooking is how I stay connected to all these places. I love the improvasation to it. There's something deeply satisfying about feeding people something you made."}</p>),
       links: [],
@@ -833,7 +846,7 @@ export default function Home() {
                 <div className={`section-content ${sectionRevealed.about ? "revealed" : ""}`}>
                   <div className="about-container">
                     <div className="about-text about-text-reveal">
-                      <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.png", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.png", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.png", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jerseycity.jpg", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.png", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.jpg", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.png", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utd.jpg", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
+                      <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.png", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.png", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.png", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jersey.png", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.png", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.png", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.png", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utdallas.png", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
                       <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs,"}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.png", "idris & ling 🐾"); } }}> Idris and Ling</span>{", and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
                       <p className="about-monthly-quote"><span className="about-monthly-quote-label">{monthlyQuote.monthLabel}:</span>{" "}<span className={`about-monthly-quote-link ${polaroidStack.some((p) => p.key === monthlyQuote.polaroidKey) ? "about-monthly-quote-link-active" : ""}`} onClick={() => togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption); } }}>&ldquo;{monthlyQuote.text}&rdquo;</span></p>
                     </div>
