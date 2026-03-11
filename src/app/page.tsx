@@ -424,7 +424,7 @@ const monthlyQuote = {
 };
 
 export default function Home() {
-  const [greeting, setGreeting] = useState("Hello,");
+  const [greeting] = useState(() => getGreeting());
   const nameRef = useRef<HTMLSpanElement>(null);
   const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const [modalSection, setModalSection] = useState<string>("");
@@ -459,11 +459,6 @@ export default function Home() {
   const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; isNew: boolean }[]>([
     { id: 0, key: "base", src: "/me.png", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, isNew: true },
   ]);
-
-  useEffect(() => {
-    const raf = window.requestAnimationFrame(() => setGreeting(getGreeting()));
-    return () => window.cancelAnimationFrame(raf);
-  }, []);
 
   const ensureDrawerImageDecoded = useCallback(async (src: string) => {
     if (!src || decodedDrawerImagesRef.current.has(src)) return;
