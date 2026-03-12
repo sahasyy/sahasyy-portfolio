@@ -612,12 +612,159 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 .polaroid {
   background: #fff; padding: 10px 10px 36px 10px;
   box-shadow: 0 4px 20px rgba(0,0,0,0.1), 0 1px 4px rgba(0,0,0,0.06);
-  transform: rotate(2.5deg); transition: transform 0.3s ease; width: 230px;
+  transform: rotate(2.5deg); transition: transform 0.3s ease, background-color 0.3s ease, box-shadow 0.3s ease; width: 230px;
 }
 .polaroid:hover { transform: rotate(0deg); }
-.polaroid-image-wrapper { position: relative; overflow: hidden; }
-.polaroid-image { width: 100%; aspect-ratio: 1; object-fit: cover; display: block; }
+.polaroid-image-wrapper {
+  position: relative;
+  overflow: hidden;
+  box-shadow:
+    inset 0 0 0 1px rgba(78, 59, 42, 0.16),
+    inset 0 12px 16px rgba(255, 247, 235, 0.25),
+    inset 0 -12px 22px rgba(98, 70, 42, 0.13);
+}
+.polaroid-image-wrapper::before,
+.polaroid-image-wrapper::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+}
+.polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(255, 252, 245, 0.4) 0%, rgba(255, 250, 240, 0.12) 26%, rgba(131, 96, 60, 0.08) 100%),
+    radial-gradient(circle at 18% 8%, rgba(255, 255, 255, 0.26) 0%, rgba(255, 255, 255, 0) 34%),
+    radial-gradient(circle at 82% 14%, rgba(255, 247, 232, 0.12) 0%, rgba(255, 247, 232, 0) 32%);
+  mix-blend-mode: soft-light;
+}
+.polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 50% 122%, rgba(62, 40, 22, 0.24) 0%, rgba(62, 40, 22, 0.06) 55%, transparent 75%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 56%, rgba(74, 50, 28, 0.16) 100%),
+    repeating-linear-gradient(0deg, rgba(84, 58, 34, 0.04) 0 1px, rgba(255, 255, 255, 0.02) 1px 2px);
+  mix-blend-mode: multiply;
+  opacity: 0.72;
+}
+.polaroid-image {
+  width: 100%;
+  aspect-ratio: 1;
+  object-fit: cover;
+  display: block;
+  position: relative;
+  z-index: 0;
+  filter: saturate(0.92) contrast(1.02) brightness(1.03) sepia(0.06);
+}
+.polaroid-develop { z-index: 2; }
 .polaroid-caption { font-family: var(--font-body); font-size: 11px; color: var(--color-text-muted); text-align: center; margin-top: 10px; }
+
+/* Keep instant-film paper white; vary only the photo treatment. */
+.polaroid[class*="polaroid-look-"] { background: #fff; }
+
+.polaroid.polaroid-look-amber .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(255, 250, 242, 0.48) 0%, rgba(255, 237, 208, 0.14) 28%, rgba(126, 88, 49, 0.08) 100%),
+    radial-gradient(circle at 14% 8%, rgba(255, 243, 217, 0.24) 0%, rgba(255, 243, 217, 0) 34%),
+    repeating-linear-gradient(0deg, rgba(140, 95, 54, 0.02) 0 1px, rgba(255, 255, 255, 0.015) 1px 2px);
+  mix-blend-mode: soft-light;
+}
+.polaroid.polaroid-look-amber .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 50% 121%, rgba(63, 42, 26, 0.24) 0%, rgba(63, 42, 26, 0.07) 54%, transparent 74%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 57%, rgba(83, 56, 34, 0.16) 100%);
+  opacity: 0.68;
+}
+.polaroid.polaroid-look-amber .polaroid-image { filter: saturate(0.96) contrast(1.04) brightness(1.03) sepia(0.08); }
+
+.polaroid.polaroid-look-saffron .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(255, 244, 226, 0.58) 0%, rgba(255, 223, 182, 0.2) 34%, rgba(146, 84, 42, 0.09) 100%),
+    radial-gradient(circle at 90% 8%, rgba(255, 190, 110, 0.28) 0%, rgba(255, 190, 110, 0) 36%);
+  mix-blend-mode: color-dodge;
+}
+.polaroid.polaroid-look-saffron .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 50% 116%, rgba(81, 46, 24, 0.3) 0%, rgba(81, 46, 24, 0.1) 54%, transparent 76%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 54%, rgba(92, 54, 28, 0.18) 100%),
+    repeating-linear-gradient(0deg, rgba(121, 68, 35, 0.05) 0 1px, rgba(255, 255, 255, 0.015) 1px 2px);
+  opacity: 0.78;
+}
+.polaroid.polaroid-look-saffron .polaroid-image { filter: saturate(1.08) contrast(1.08) brightness(1.01) sepia(0.14) hue-rotate(-8deg); }
+.polaroid.polaroid-look-cyan .polaroid-image-wrapper {
+  box-shadow:
+    inset 0 0 0 1px rgba(42, 68, 88, 0.16),
+    inset 0 14px 16px rgba(238, 248, 255, 0.34),
+    inset 0 -14px 20px rgba(43, 79, 103, 0.12);
+}
+.polaroid.polaroid-look-cyan .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(242, 252, 255, 0.5) 0%, rgba(220, 244, 255, 0.12) 28%, rgba(40, 87, 112, 0.07) 100%),
+    radial-gradient(circle at 10% 10%, rgba(188, 232, 255, 0.26) 0%, rgba(188, 232, 255, 0) 34%);
+  mix-blend-mode: soft-light;
+}
+.polaroid.polaroid-look-cyan .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 52% 120%, rgba(24, 61, 88, 0.25) 0%, rgba(24, 61, 88, 0.08) 52%, transparent 74%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 58%, rgba(28, 67, 97, 0.16) 100%);
+  opacity: 0.68;
+}
+.polaroid.polaroid-look-cyan .polaroid-image { filter: saturate(0.84) contrast(1.05) brightness(1.05) hue-rotate(8deg); }
+.polaroid.polaroid-look-sunset .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(255, 236, 221, 0.52) 0%, rgba(255, 214, 189, 0.14) 28%, rgba(146, 78, 62, 0.08) 100%),
+    radial-gradient(circle at 84% 12%, rgba(255, 154, 112, 0.26) 0%, rgba(255, 154, 112, 0) 38%),
+    radial-gradient(circle at 18% 86%, rgba(255, 199, 145, 0.18) 0%, rgba(255, 199, 145, 0) 44%);
+  mix-blend-mode: screen;
+}
+.polaroid.polaroid-look-sunset .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 48% 124%, rgba(77, 37, 24, 0.3) 0%, rgba(77, 37, 24, 0.1) 52%, transparent 74%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 54%, rgba(89, 42, 28, 0.18) 100%);
+  opacity: 0.76;
+}
+.polaroid.polaroid-look-sunset .polaroid-image { filter: saturate(1.14) contrast(1.1) brightness(1.01) sepia(0.15) hue-rotate(-15deg); }
+.polaroid.polaroid-look-sage .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(245, 252, 238, 0.52) 0%, rgba(233, 245, 225, 0.16) 26%, rgba(70, 101, 63, 0.07) 100%),
+    radial-gradient(circle at 14% 10%, rgba(220, 243, 204, 0.24) 0%, rgba(220, 243, 204, 0) 36%);
+  mix-blend-mode: soft-light;
+}
+.polaroid.polaroid-look-sage .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 50% 118%, rgba(44, 66, 37, 0.24) 0%, rgba(44, 66, 37, 0.08) 54%, transparent 74%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 56%, rgba(52, 78, 45, 0.14) 100%);
+  opacity: 0.67;
+}
+.polaroid.polaroid-look-sage .polaroid-image { filter: saturate(0.9) contrast(1.02) brightness(1.04) hue-rotate(16deg); }
+.polaroid.polaroid-look-petal .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(255, 247, 248, 0.56) 0%, rgba(253, 230, 234, 0.18) 30%, rgba(125, 78, 87, 0.06) 100%),
+    radial-gradient(circle at 84% 10%, rgba(255, 226, 233, 0.24) 0%, rgba(255, 226, 233, 0) 36%);
+  mix-blend-mode: screen;
+}
+.polaroid.polaroid-look-petal .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 50% 120%, rgba(77, 45, 51, 0.22) 0%, rgba(77, 45, 51, 0.07) 54%, transparent 74%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 58%, rgba(89, 54, 62, 0.13) 100%);
+  opacity: 0.64;
+}
+.polaroid.polaroid-look-petal .polaroid-image { filter: saturate(0.9) contrast(0.99) brightness(1.07) sepia(0.04); }
+.polaroid.polaroid-look-punch .polaroid-image-wrapper::before {
+  background:
+    linear-gradient(180deg, rgba(255, 235, 228, 0.58) 0%, rgba(255, 206, 194, 0.2) 30%, rgba(144, 46, 44, 0.08) 100%),
+    radial-gradient(circle at 86% 9%, rgba(255, 112, 90, 0.3) 0%, rgba(255, 112, 90, 0) 34%),
+    radial-gradient(circle at 14% 85%, rgba(255, 183, 128, 0.2) 0%, rgba(255, 183, 128, 0) 40%);
+  mix-blend-mode: color-dodge;
+}
+.polaroid.polaroid-look-punch .polaroid-image-wrapper::after {
+  background:
+    radial-gradient(circle at 48% 122%, rgba(89, 27, 22, 0.35) 0%, rgba(89, 27, 22, 0.11) 52%, transparent 72%),
+    linear-gradient(180deg, rgba(0, 0, 0, 0) 54%, rgba(94, 35, 27, 0.2) 100%),
+    repeating-linear-gradient(0deg, rgba(129, 45, 37, 0.05) 0 1px, rgba(255, 255, 255, 0.018) 1px 2px);
+  opacity: 0.82;
+}
+.polaroid.polaroid-look-punch .polaroid-image { filter: saturate(1.2) contrast(1.15) brightness(1.02) sepia(0.08) hue-rotate(-18deg); }
+
 @keyframes overlayFade { 0% { opacity: 1; } 100% { opacity: 0; } }
 @keyframes captionFadeIn { to { opacity: 1; } }
 
@@ -1025,11 +1172,15 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
   gap: 0.35rem;
   width: 100%;
 }
-.webring-arrow-link { font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); text-decoration: none; border: 1.5px dashed var(--color-border); width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
-.webring-arrow-link:hover, .webring-arrow-link:focus-visible { border-style: solid; border-color: var(--color-text); color: var(--color-text); opacity: 1; }
-.webring-logo-link { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1.5px dashed var(--color-border); transition: all 0.2s ease; }
-.webring-logo-link:hover, .webring-logo-link:focus-visible { border-style: solid; border-color: var(--color-text); opacity: 1; }
-.webring-logo { width: 16px; height: auto; opacity: 0.5; display: block; }
+.webring-arrow-link { font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); text-decoration: none; border: 1.5px dashed var(--color-border); width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; background: rgba(163, 91, 60, 0.05); }
+.webring-arrow-link:hover, .webring-arrow-link:focus-visible { border-style: solid; border-color: var(--color-accent); background: var(--color-accent); color: var(--color-bg); opacity: 1; }
+.webring-arrow-link:active { border-style: solid; border-color: #8d4d32; background: #8d4d32; color: var(--color-bg); }
+.webring-logo-link { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1.5px dashed var(--color-border); transition: all 0.2s ease; background: rgba(163, 91, 60, 0.05); }
+.webring-logo-link:hover, .webring-logo-link:focus-visible { border-style: solid; border-color: var(--color-accent); background: var(--color-accent); opacity: 1; }
+.webring-logo-link:active { border-style: solid; border-color: #8d4d32; background: #8d4d32; }
+.webring-logo { width: 16px; height: auto; opacity: 0.62; display: block; transition: opacity 0.2s ease, filter 0.2s ease; }
+.webring-logo-link:hover .webring-logo,
+.webring-logo-link:focus-visible .webring-logo { opacity: 0.92; filter: invert(0.96); }
 
 /* ---- City Skyline ---- */
 .skyline-full-bleed { width: 100%; overflow: hidden; margin-top: 2rem; margin-bottom: 0; padding-bottom: 0; pointer-events: none; user-select: none; line-height: 0; font-size: 0; }
@@ -1055,8 +1206,31 @@ body.night-mode .mobile-menu-grid, body.night-mode .mobile-menu-link { border-co
 body.night-mode .section-divider { border-top-color: rgba(200, 200, 200, 0.2); }
 body.night-mode .section-title, body.night-mode .experience-role, body.night-mode .project-name, body.night-mode .human-label { color: #f7f5f2; }
 body.night-mode .body-text, body.night-mode .experience-org, body.night-mode .experience-date, body.night-mode .experience-prev, body.night-mode .project-tag, body.night-mode .project-tech, body.night-mode .polaroid-caption, body.night-mode .footer-text, body.night-mode .footer-spotify, body.night-mode .footer-link, body.night-mode .footer-webring a { color: rgba(247, 245, 242, 0.6); }
-body.night-mode .webring-arrow-link:hover, body.night-mode .webring-logo-link:hover { border-color: #f7f5f2; color: #f7f5f2; }
+body.night-mode .webring-arrow-link,
+body.night-mode .webring-logo-link {
+  border-color: rgba(200, 200, 200, 0.3);
+  background: rgba(255, 255, 255, 0.08);
+}
+body.night-mode .webring-arrow-link:hover,
+body.night-mode .webring-arrow-link:focus-visible,
+body.night-mode .webring-logo-link:hover,
+body.night-mode .webring-logo-link:focus-visible {
+  border-color: #f7f5f2;
+  background: #f7f5f2;
+  color: #1a1a1a;
+}
+body.night-mode .webring-arrow-link:active,
+body.night-mode .webring-logo-link:active {
+  border-color: #f7f5f2;
+  background: rgba(247, 245, 242, 0.8);
+  color: #1a1a1a;
+}
 body.night-mode .webring-logo { filter: invert(1); }
+body.night-mode .webring-logo-link:hover .webring-logo,
+body.night-mode .webring-logo-link:focus-visible .webring-logo,
+body.night-mode .webring-logo-link:active .webring-logo { filter: none; opacity: 0.88; }
+body.night-mode .polaroid-image-wrapper::before { opacity: 0.8; }
+body.night-mode .polaroid-image-wrapper::after { opacity: 0.62; }
 body.night-mode .greeting, body.night-mode .hero-name { color: #f7f5f2; }
 body.night-mode .experience-grid, body.night-mode .project-grid, body.night-mode .human-grid { border-color: rgba(200, 200, 200, 0.2); }
 body.night-mode .experience-card, body.night-mode .project-card, body.night-mode .human-card { background: rgba(255, 255, 255, 0.04); border-color: rgba(200, 200, 200, 0.2); }

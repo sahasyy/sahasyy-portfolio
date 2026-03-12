@@ -504,6 +504,24 @@ const monthlyQuote = {
   polaroidCaption: "resiliant like punch",
 };
 
+type PolaroidLook = "amber" | "saffron" | "cyan" | "sunset" | "sage" | "petal" | "punch";
+const POLAROID_LOOK_BY_KEY: Record<string, PolaroidLook> = {
+  base: "amber",
+  bombay: "saffron",
+  jc: "cyan",
+  dallas: "sunset",
+  utd: "sage",
+  dogs: "petal",
+  "quote-feb-2026": "punch",
+};
+const FALLBACK_POLAROID_LOOKS: PolaroidLook[] = ["amber", "saffron", "cyan", "sunset", "sage", "petal", "punch"];
+function getPolaroidLook(key: string): PolaroidLook {
+  const known = POLAROID_LOOK_BY_KEY[key];
+  if (known) return known;
+  const seed = key.split("").reduce((acc, ch) => acc + ch.charCodeAt(0), 0);
+  return FALLBACK_POLAROID_LOOKS[seed % FALLBACK_POLAROID_LOOKS.length];
+}
+
 export default function Home() {
   const [greeting] = useState(() => getGreeting());
   const nameRef = useRef<HTMLSpanElement>(null);
@@ -537,8 +555,8 @@ export default function Home() {
   const [drawerImageReady, setDrawerImageReady] = useState(false);
   const [drawerBodyReady, setDrawerBodyReady] = useState(false);
 
-  const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; isNew: boolean }[]>([
-    { id: 0, key: "base", src: "/me.jpg", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, isNew: true },
+  const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; look: PolaroidLook; isNew: boolean }[]>([
+    { id: 0, key: "base", src: "/me.jpg", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, look: getPolaroidLook("base"), isNew: true },
   ]);
 
   const ensureDrawerImageDecoded = useCallback(async (src: string) => {
@@ -614,7 +632,7 @@ export default function Home() {
       const exists = prev.find((p) => p.key === key);
       if (exists) return prev.filter((p) => p.key !== key);
       const id = polaroidIdRef.current++;
-      return [...prev, { id, key, src, caption, rotation: (Math.random() - 0.5) * 8, offsetX: (Math.random() - 0.5) * 16, offsetY: (Math.random() - 0.5) * 12, isNew: true }];
+      return [...prev, { id, key, src, caption, rotation: (Math.random() - 0.5) * 8, offsetX: (Math.random() - 0.5) * 16, offsetY: (Math.random() - 0.5) * 12, look: getPolaroidLook(key), isNew: true }];
     });
   }, []);
 
@@ -939,7 +957,7 @@ export default function Home() {
                     <div className="polaroid-wrapper polaroid-drop-reveal" aria-hidden="true">
                       <div className="polaroid-stack">
                         {polaroidStack.map((p, i) => (
-                          <div key={p.id} className={`polaroid polaroid-stacked ${p.isNew && i > 0 ? "polaroid-entering" : ""}`} style={{ zIndex: i + 1, transform: `rotate(${p.rotation}deg) translate(${p.offsetX}px, ${p.offsetY}px)` }}>
+                          <div key={p.id} className={`polaroid polaroid-stacked polaroid-look-${p.look} ${p.isNew && i > 0 ? "polaroid-entering" : ""}`} style={{ zIndex: i + 1, transform: `rotate(${p.rotation}deg) translate(${p.offsetX}px, ${p.offsetY}px)` }}>
                             <div className="polaroid-image-wrapper"><img src={p.src} alt={p.caption} className="polaroid-image" loading="lazy" decoding="async" />{p.isNew && <div className={`polaroid-develop ${p.id === 0 ? "polaroid-develop-initial" : ""}`} />}</div>
                             <p className="polaroid-caption">{p.caption}</p>
                           </div>
