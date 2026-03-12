@@ -14,8 +14,8 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
     const el = wrapperRef.current;
     if (!el) return;
     if (typeof window === "undefined" || typeof window.IntersectionObserver === "undefined") {
-      setShouldRender(true);
-      return;
+      const timeoutId = window.setTimeout(() => setShouldRender(true), 0);
+      return () => window.clearTimeout(timeoutId);
     }
     const observer = new IntersectionObserver(
       (entries) => {
@@ -92,8 +92,8 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
     const el = canvasRef.current;
     if (!el) return;
     if (typeof window === "undefined" || typeof window.IntersectionObserver === "undefined") {
-      setShouldRender(true);
-      return;
+      const timeoutId = window.setTimeout(() => setShouldRender(true), 0);
+      return () => window.clearTimeout(timeoutId);
     }
     const rootMargin = className?.includes("hero-seagull") ? "260px 0px" : "420px 0px";
     const observer = new IntersectionObserver(
@@ -433,7 +433,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingertip-card.jpg",
+    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell.jpg",
     modal: {
       title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip-modal.jpg",
       preloadImages: ["/fingertip-modal.jpg"],
@@ -641,12 +641,12 @@ export default function Home() {
   // • scroll-driven background color
   const scrollBgRef = useRef("");
   const sectionColors = useRef([
-    { selector: ".section-hero", color: "#f5f0e8" },
-    { selector: ".section-about", color: "#f3ece2" },
-    { selector: ".section-experience", color: "#f2ede5" },
-    { selector: ".section-projects", color: "#f1ece4" },
-    { selector: ".section-human", color: "#f4efe6" },
-    { selector: ".section-footer", color: "#f5f0e8" },
+    { selector: ".section-hero", color: "#f6ecdc" },
+    { selector: ".section-about", color: "#f5e9da" },
+    { selector: ".section-experience", color: "#f4e8d9" },
+    { selector: ".section-projects", color: "#f3e7d8" },
+    { selector: ".section-human", color: "#f5eadb" },
+    { selector: ".section-footer", color: "#f6ecdc" },
   ]);
   const sectionElsRef = useRef<Array<{ el: HTMLElement | null; color: string }>>([]);
 
@@ -700,7 +700,7 @@ export default function Home() {
 
       // 3) Scroll-driven background color
       if (!nightMode) {
-        let activeBg = sectionColors.current[0]?.color ?? "#f5f0e8";
+        let activeBg = sectionColors.current[0]?.color ?? "#f6ecdc";
         for (const s of sectionElsRef.current) {
           const el = s.el;
           if (el && el.getBoundingClientRect().top <= viewMid) activeBg = s.color;
@@ -1037,29 +1037,25 @@ export default function Home() {
         <div className="sticky-panel">
           <footer className="footer" role="contentinfo">
             <div className="footer-inner">
-              <div className="footer-left">
-                <span className="footer-text">{"© 2026 Sahas Sharma. Built with care."}</span>
-                <div className="footer-spotify" aria-live="polite">
-                  {spotify.isPlaying && spotify.title ? (<><span className="spotify-dot" aria-hidden="true" />{"Currently listening to "}<a href={spotify.url} target="_blank" rel="noopener noreferrer" className="spotify-track">{spotify.title}</a>{" by "}{spotify.artist}</>) : (<><span className="spotify-dot offline" aria-hidden="true" />{"Not playing anything right now"}</>)}
-                </div>
+              <span className="footer-text">{"© 2026 Sahas Sharma. Built with care."}</span>
+              <div className="footer-links">
+                <a href="https://github.com/sahasyy" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub</a>
+                <button
+                  type="button"
+                  className={`footer-link footer-link-button ${showBuildNote ? "active" : ""}`}
+                  onClick={() => setShowBuildNote(true)}
+                  aria-expanded={showBuildNote}
+                  aria-controls="build-note-modal"
+                  aria-haspopup="dialog"
+                >
+                  Build
+                </button>
+                <a href="mailto:sahassharma19@gmail.com" className="footer-link">Email</a>
               </div>
-              <div className="footer-right">
-                <div className="footer-links">
-                  <a href="https://github.com/sahasyy" target="_blank" rel="noopener noreferrer" className="footer-link">GitHub</a>
-                  <button
-                    type="button"
-                    className={`footer-link footer-link-button ${showBuildNote ? "active" : ""}`}
-                    onClick={() => setShowBuildNote(true)}
-                    aria-expanded={showBuildNote}
-                    aria-controls="build-note-modal"
-                    aria-haspopup="dialog"
-                  >
-                    Build
-                  </button>
-                  <a href="mailto:sahassharma19@gmail.com" className="footer-link">Email</a>
-                </div>
-                <div className="footer-webring"><a href="https://cs.utdring.com/#sahassharma.com?nav=prev" className="webring-arrow-link" aria-label="Previous in CS Webring">←</a><a href="https://cs.utdring.com/#sahassharma.com" target="_blank" rel="noopener noreferrer" className="webring-logo-link"><img src="https://cs.utdring.com/icon.black.svg" alt="CS Webring" className="webring-logo" loading="lazy" decoding="async" /></a><a href="https://cs.utdring.com/#sahassharma.com?nav=next" className="webring-arrow-link" aria-label="Next in CS Webring">→</a></div>
+              <div className="footer-spotify" aria-live="polite">
+                {spotify.isPlaying && spotify.title ? (<><span className="spotify-dot" aria-hidden="true" />{"Currently listening to "}<a href={spotify.url} target="_blank" rel="noopener noreferrer" className="spotify-track">{spotify.title}</a>{" by "}{spotify.artist}</>) : (<><span className="spotify-dot offline" aria-hidden="true" />{"Not playing anything right now"}</>)}
               </div>
+              <div className="footer-webring"><a href="https://cs.utdring.com/#sahassharma.com?nav=prev" className="webring-arrow-link" aria-label="Previous in CS Webring">←</a><a href="https://cs.utdring.com/#sahassharma.com" target="_blank" rel="noopener noreferrer" className="webring-logo-link"><img src="https://cs.utdring.com/icon.black.svg" alt="CS Webring" className="webring-logo" loading="lazy" decoding="async" /></a><a href="https://cs.utdring.com/#sahassharma.com?nav=next" className="webring-arrow-link" aria-label="Next in CS Webring">→</a></div>
             </div>
             <div className="skyline-full-bleed" ref={skylineRef} aria-hidden="true"><DitheredSkyline src={nightMode ? "/earth.png" : randomCity.src} nightMode={nightMode} /></div>
             <div ref={footerEndRef} aria-hidden="true" />

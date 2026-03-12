@@ -23,10 +23,10 @@
 }
 
 :root {
-  --color-bg: #f3eee8;
+  --color-bg: #f4ecde;
   --color-text: #372e28;
   --color-text-muted: #6a6056;
-  --color-accent: #a35b3c;
+  --color-accent: #9b5033;
   --navbar-height: 52px;
   --color-border: #c9beb2;
   --color-focus: #c98a34;
@@ -59,10 +59,11 @@ body {
   color: var(--color-text);
   background-color: var(--color-bg);
   background-image:
-    linear-gradient(45deg, rgba(26, 26, 26, 0.018) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.018) 75%),
-    linear-gradient(45deg, rgba(26, 26, 26, 0.018) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.018) 75%);
-  background-size: 4px 4px;
-  background-position: 0 0, 2px 2px;
+    linear-gradient(180deg, rgba(201, 138, 52, 0.05) 0%, rgba(163, 91, 60, 0.025) 100%),
+    linear-gradient(45deg, rgba(26, 26, 26, 0.042) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.042) 75%),
+    linear-gradient(45deg, rgba(26, 26, 26, 0.042) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.042) 75%);
+  background-size: 100% 100%, 4px 4px, 4px 4px;
+  background-position: 0 0, 0 0, 2px 2px;
   width: 100%;
   max-width: 100vw;
   overflow-x: clip;
@@ -770,9 +771,11 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
   width: min(480px, 92vw);
   background: var(--color-bg);
   background-image:
-    linear-gradient(45deg, rgba(26, 26, 26, 0.018) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.018) 75%),
-    linear-gradient(45deg, rgba(26, 26, 26, 0.018) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.018) 75%);
-  background-size: 4px 4px; background-position: 0 0, 2px 2px;
+    linear-gradient(180deg, rgba(201, 138, 52, 0.04) 0%, rgba(163, 91, 60, 0.02) 100%),
+    linear-gradient(45deg, rgba(26, 26, 26, 0.04) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.04) 75%),
+    linear-gradient(45deg, rgba(26, 26, 26, 0.04) 25%, transparent 25%, transparent 75%, rgba(26, 26, 26, 0.04) 75%);
+  background-size: 100% 100%, 4px 4px, 4px 4px;
+  background-position: 0 0, 0 0, 2px 2px;
   border-left: 1.5px dashed var(--color-border); z-index: 1001;
   display: flex; flex-direction: column;
   transform: translateX(100%);
@@ -850,16 +853,55 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 
 /* ---- Footer ---- */
 .footer { padding: 0; margin-top: 0; overflow: visible; width: 100%; }
-.footer-inner { max-width: var(--max-width); margin: 0 auto; padding: 0 1.5rem; display: flex; justify-content: space-between; align-items: flex-start; flex-wrap: wrap; gap: 1rem; }
-.footer-left { display: flex; flex-direction: column; gap: 0.75rem; }
+.footer-inner {
+  max-width: var(--max-width);
+  margin: 0 auto;
+  padding: 0 1.5rem;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  grid-template-areas:
+    "meta links"
+    "spotify webring";
+  align-items: center;
+  column-gap: 1.5rem;
+  row-gap: 0.9rem;
+}
 .footer-text { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); }
-.footer-spotify { display: flex; align-items: center; gap: 0.5rem; font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); }
+.footer-text { grid-area: meta; display: block; }
+.footer-spotify {
+  grid-area: spotify;
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-family: var(--font-body);
+  font-size: 13px;
+  color: var(--color-text-muted);
+  white-space: nowrap;
+  min-width: 0;
+}
 .spotify-dot { width: 8px; height: 8px; background: #c98a34; display: inline-block; animation: pulse 2s ease infinite; }
 .spotify-dot.offline { background: var(--color-border); animation: none; }
-.spotify-track { color: var(--color-text); text-decoration: none; font-weight: 600; transition: opacity 0.2s ease; }
+.spotify-track {
+  color: var(--color-text);
+  text-decoration: none;
+  font-weight: 600;
+  transition: opacity 0.2s ease;
+  display: inline-block;
+  max-width: min(32vw, 360px);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  vertical-align: bottom;
+}
 .spotify-track:hover { opacity: 0.6; }
-.footer-right { display: flex; flex-direction: column; align-items: flex-end; gap: 0.75rem; }
-.footer-links { display: flex; gap: 1.25rem; align-items: center; }
+.footer-links {
+  grid-area: links;
+  display: flex;
+  gap: 1.25rem;
+  align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
+  width: 100%;
+}
 .footer-link { font-family: var(--font-body); font-size: 13px; color: var(--color-text-muted); text-decoration: none; transition: color 0.2s ease; }
 .footer-link:hover { color: var(--color-accent); opacity: 1; }
 .footer-link-button {
@@ -970,7 +1012,15 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
   color: #443a33;
 }
 .build-note-line + .build-note-line { margin-top: 0.22rem; }
-.footer-webring { display: flex; align-items: center; gap: 0.35rem; }
+.footer-webring {
+  grid-area: webring;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  justify-self: end;
+  gap: 0.35rem;
+  width: 100%;
+}
 .webring-arrow-link { font-family: var(--font-body); font-size: 12px; color: var(--color-text-muted); text-decoration: none; border: 1.5px dashed var(--color-border); width: 32px; height: 32px; display: inline-flex; align-items: center; justify-content: center; transition: all 0.2s ease; }
 .webring-arrow-link:hover, .webring-arrow-link:focus-visible { border-style: solid; border-color: var(--color-text); color: var(--color-text); opacity: 1; }
 .webring-logo-link { display: inline-flex; align-items: center; justify-content: center; width: 32px; height: 32px; border: 1.5px dashed var(--color-border); transition: all 0.2s ease; }
@@ -1140,11 +1190,21 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .human-grid { grid-template-columns: repeat(2, 1fr); }
   .cursor-label { display: none; }
   .back-to-top { right: 1rem; bottom: 1rem; }
-  .footer-inner { padding: 0 1.25rem; flex-direction: column; align-items: center; text-align: center; }
-  .footer-left { align-items: center; }
-  .footer-right { align-items: center; }
-  .footer-spotify { justify-content: center; flex-wrap: wrap; text-align: center; }
-  .footer-links { justify-content: center; }
+  .footer-inner {
+    padding: 0 1.25rem;
+    grid-template-columns: 1fr;
+    grid-template-areas:
+      "meta"
+      "links"
+      "spotify"
+      "webring";
+    justify-items: center;
+    text-align: center;
+    row-gap: 0.7rem;
+  }
+  .footer-spotify { justify-content: center; text-align: center; white-space: normal; }
+  .spotify-track { max-width: none; }
+  .footer-links { justify-content: center; justify-self: center; }
   .build-note { text-align: left; }
-  .footer-webring { justify-content: center; }
+  .footer-webring { justify-content: center; justify-self: center; }
 }
