@@ -548,6 +548,7 @@ export default function Home() {
   const cursorRafRef = useRef<number>(0);
   const cursorPendingRef = useRef<{ x: number; y: number } | null>(null);
   const cursorLabelRef = useRef<HTMLDivElement>(null);
+  const siteCursorRef = useRef<HTMLDivElement>(null);
   const progressFillRef = useRef<HTMLSpanElement>(null);
   const activeSectionRef = useRef("");
   const showBackToTopRef = useRef(false);
@@ -756,6 +757,25 @@ export default function Home() {
   // Night mode body class
   useEffect(() => { if (nightMode) document.body.classList.add("night-mode"); else document.body.classList.remove("night-mode"); return () => document.body.classList.remove("night-mode"); }, [nightMode]);
 
+  // Site-only plus cursor for desktop/fine-pointer devices.
+  useEffect(() => {
+    const mq = window.matchMedia("(hover: hover) and (pointer: fine)");
+    const sync = () => {
+      document.body.classList.toggle("custom-cursor-on", mq.matches);
+      if (!mq.matches) {
+        document.body.classList.remove("custom-cursor-visible");
+        setCursorVisible(false);
+      }
+    };
+    sync();
+    mq.addEventListener("change", sync);
+    return () => {
+      mq.removeEventListener("change", sync);
+      document.body.classList.remove("custom-cursor-on");
+      document.body.classList.remove("custom-cursor-visible");
+    };
+  }, []);
+
   // Close mobile menu on resize to desktop
   useEffect(() => { const h = () => { if (window.innerWidth > 700) setMenuOpen(false); }; window.addEventListener("resize", h); return () => window.removeEventListener("resize", h); }, []);
 
@@ -763,21 +783,53 @@ export default function Home() {
   useEffect(() => { async function f() { try { const r = await fetch("/api/music"); setSpotify(await r.json()); } catch { setSpotify({ isPlaying: false }); } } f(); const i = setInterval(f, 30000); return () => clearInterval(i); }, []);
 
   useEffect(() => {
+    const showSiteCursor = () => {
+      if (document.body.classList.contains("custom-cursor-on")) {
+        document.body.classList.add("custom-cursor-visible");
+      }
+    };
+    const hideSiteCursor = () => {
+      document.body.classList.remove("custom-cursor-visible");
+      setCursorVisible(false);
+    };
     const flushCursor = () => {
       cursorRafRef.current = 0;
       const pending = cursorPendingRef.current;
-      if (!pending || !cursorLabelRef.current) return;
-      cursorLabelRef.current.style.transform = `translate3d(${pending.x + 16}px, ${pending.y + 16}px, 0)`;
+      if (!pending) return;
+      if (cursorLabelRef.current) {
+        cursorLabelRef.current.style.transform = `translate3d(${pending.x + 16}px, ${pending.y + 16}px, 0)`;
+      }
+      if (siteCursorRef.current) {
+        siteCursorRef.current.style.transform = `translate3d(${pending.x - 17}px, ${pending.y - 17}px, 0)`;
+      }
       cursorPendingRef.current = null;
     };
     const onPointerMove = (e: PointerEvent) => {
+      showSiteCursor();
       cursorPendingRef.current = { x: e.clientX, y: e.clientY };
       if (!cursorRafRef.current) cursorRafRef.current = window.requestAnimationFrame(flushCursor);
     };
+    const onPointerOver = () => showSiteCursor();
+    const onPointerOut = (e: PointerEvent) => {
+      if (!e.relatedTarget) hideSiteCursor();
+    };
+    const onVisibilityChange = () => {
+      if (document.visibilityState !== "visible") hideSiteCursor();
+    };
+    const onWindowBlur = () => hideSiteCursor();
     window.addEventListener("pointermove", onPointerMove, { passive: true });
+    window.addEventListener("pointerover", onPointerOver, true);
+    window.addEventListener("pointerout", onPointerOut, true);
+    document.addEventListener("visibilitychange", onVisibilityChange);
+    window.addEventListener("blur", onWindowBlur);
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
+      window.removeEventListener("pointerover", onPointerOver, true);
+      window.removeEventListener("pointerout", onPointerOut, true);
+      document.removeEventListener("visibilitychange", onVisibilityChange);
+      window.removeEventListener("blur", onWindowBlur);
       if (cursorRafRef.current) window.cancelAnimationFrame(cursorRafRef.current);
+      document.body.classList.remove("custom-cursor-visible");
     };
   }, []);
 
@@ -1134,6 +1186,7 @@ export default function Home() {
         )}
       </div>
 
+      <div ref={siteCursorRef} className="site-cursor-plus" aria-hidden="true" />
       <div ref={cursorLabelRef} className={`cursor-label ${cursorVisible ? "visible" : ""}`} aria-hidden="true">{cursorText}</div>
       <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top">Back to top</button>
 
