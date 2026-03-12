@@ -179,35 +179,46 @@ const KONAMI_CODE = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","Ar
 
 function getGreeting(): string {
   const hour = new Date().getHours();
+  const lateNight = [
+    "Up late. Same.",
+    "Burning the midnight oil,",
+    "The quiet hours hit different,",
+    "Stars out, ideas flowing,",
+    "Night owl mode,",
+    "The moon's keeping us company,",
+  ];
   const m = [
-    "Good morning, glad you're here,",
-    "A fresh start today,",
-    "Morning light and new ideas,",
-    "Hope your day begins gently,",
-    "Starting the day with intention,",
-    "A quiet morning hello,",
-    "New day, clear mind,",
+    "Good morning,",
+    "Hey, early start today,",
+    "Morning. Let's get into it,",
+    "Fresh day ahead,",
+    "Morning, let's see what we can do,",
+    "Hey, good morning,",
+    "Glad you're here,",
   ];
   const a = [
-    "Good afternoon, thanks for stopping by,",
-    "Hope the day is treating you well,",
-    "A quick pause in the middle of the day,",
-    "Checking in while the sun is still up,",
-    "Afternoons are for steady progress,",
-    "A calm moment between meetings,",
-    "Still building, still learning,",
+    "Good afternoon,",
+    "Hey, hope the day's been good,",
+    "Let's keep it going,",
+    "Good to have you here,",
+    "Hey there,",
+    "Ready when you are,",
+    "Afternoon, let's do this,",
   ];
   const e = [
-    "Good evening, welcome in,",
-    "Winding down with curiosity,",
-    "Night hours, thoughtful work,",
-    "Hope your day had good moments,",
-    "A quieter time to reflect,",
-    "Late hours, honest ideas,",
-    "Thanks for ending your day here,",
+    "Good evening,",
+    "Hey, good to see you,",
+    "Hope today was a good one,",
+    "Hey, welcome in,",
+    "Evening. Let's get into it,",
+    "Settling in for the night,",
+    "Good evening, glad you're here,",
   ];
   const p = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
-  if (hour < 12) return p(m); if (hour < 18) return p(a); return p(e);
+  if (hour < 5) return p(lateNight);
+  if (hour < 12) return p(m);
+  if (hour < 18) return p(a);
+  return p(e);
 }
 
 interface ModalData {
