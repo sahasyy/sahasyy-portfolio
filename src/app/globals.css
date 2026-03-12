@@ -589,7 +589,9 @@ body.custom-cursor-on, body.custom-cursor-on * { cursor: none !important; }
 .greeting {
   font-family: var(--font-title); font-size: 56px; font-weight: 500;
   line-height: 1.1; color: var(--color-text); letter-spacing: -0.03em;
+  min-height: 1.1em;
 }
+.greeting-placeholder { display: inline-block; width: 100%; min-height: 1em; }
 .hero-name {
   font-family: var(--font-title); font-size: 56px; font-weight: 500;
   line-height: 1.1; letter-spacing: -0.03em; color: var(--color-text); margin-top: 0.2rem;

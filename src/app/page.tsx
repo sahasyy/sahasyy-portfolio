@@ -178,7 +178,8 @@ const cities = [
 const KONAMI_CODE = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 function getGreeting(): string {
-  const hour = new Date().getHours();
+  const now = new Date();
+  const hour = now.getHours();
   const lateNight = [
     "Up late. Same.",
     "Burning the midnight oil,",
@@ -214,11 +215,16 @@ function getGreeting(): string {
     "Settling in for the night,",
     "Good evening, glad you're here,",
   ];
-  const p = (arr: string[]) => arr[Math.floor(Math.random() * arr.length)];
-  if (hour < 5) return p(lateNight);
-  if (hour < 12) return p(m);
-  if (hour < 18) return p(a);
-  return p(e);
+  const dayOfYear = Math.floor((Date.UTC(now.getFullYear(), now.getMonth(), now.getDate()) - Date.UTC(now.getFullYear(), 0, 0)) / 86400000);
+  const minuteWindow = Math.floor(now.getMinutes() / 10);
+  const pickStable = (arr: string[]) => {
+    const seed = dayOfYear * 31 + hour * 7 + minuteWindow;
+    return arr[seed % arr.length];
+  };
+  if (hour < 5) return pickStable(lateNight);
+  if (hour < 12) return pickStable(m);
+  if (hour < 18) return pickStable(a);
+  return pickStable(e);
 }
 
 interface ModalData {
@@ -534,7 +540,7 @@ function getPolaroidLook(key: string): PolaroidLook {
 }
 
 export default function Home() {
-  const [greeting] = useState(() => getGreeting());
+  const [greeting, setGreeting] = useState("");
   const nameRef = useRef<HTMLSpanElement>(null);
   const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const [modalSection, setModalSection] = useState<string>("");
@@ -566,6 +572,11 @@ export default function Home() {
   const decodedDrawerImagesRef = useRef<Set<string>>(new Set());
   const [drawerImageReady, setDrawerImageReady] = useState(false);
   const [drawerBodyReady, setDrawerBodyReady] = useState(false);
+
+  // Client-only greeting avoids SSR/CSR phrase mismatches and visual stutter.
+  useEffect(() => {
+    setGreeting(getGreeting());
+  }, []);
 
   const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; look: PolaroidLook; isNew: boolean }[]>([
     { id: 0, key: "base", src: "/me.jpg", caption: "NYC 12/24/25", rotation: 2.5, offsetX: 0, offsetY: 0, look: getPolaroidLook("base"), isNew: true },
@@ -985,13 +996,17 @@ export default function Home() {
                   <div className="hero-copy">
                     <div className="hero-line hero-line-1">
                       <h1 className="greeting" aria-live="polite">
-                        <span key={greeting} className="greeting-phrase">
-                          {greeting.split(" ").map((word, i) => (
-                            <span key={`${greeting}-${word}-${i}`} className="greeting-word" style={{ "--word-index": i } as React.CSSProperties}>
-                              {word}
-                            </span>
-                          ))}
-                        </span>
+                        {greeting ? (
+                          <span className="greeting-phrase">
+                            {greeting.split(" ").map((word, i) => (
+                              <span key={`${greeting}-${word}-${i}`} className="greeting-word" style={{ "--word-index": i } as React.CSSProperties}>
+                                {word}
+                              </span>
+                            ))}
+                          </span>
+                        ) : (
+                          <span className="greeting-placeholder" aria-hidden="true">{"\u00A0"}</span>
+                        )}
                       </h1>
                     </div>
                     <div className="hero-line hero-line-2"><h1 className="hero-name" onMouseMove={handleMouseMove}>{"I'm "}<span ref={nameRef} className="gradient-name">Sahas Sharma.</span></h1></div>
