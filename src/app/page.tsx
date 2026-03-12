@@ -42,7 +42,7 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
     img.crossOrigin = "anonymous";
     img.onload = () => {
       const render = () => {
-        const maxWidth = 1600;
+        const maxWidth = 1200;
         const scale = img.width > maxWidth ? maxWidth / img.width : 1;
         const targetW = Math.max(300, Math.round(img.width * scale));
         const targetH = Math.max(80, Math.round(img.height * scale));
@@ -70,8 +70,8 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
         ctx.putImageData(imageData, 0, 0);
       };
       const w = window as Window & { requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number; cancelIdleCallback?: (id: number) => void };
-      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: 180 });
-      else timeoutId = window.setTimeout(render, 0);
+      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: 1400 });
+      else timeoutId = window.setTimeout(render, 220);
     };
     img.src = src;
     return () => {
@@ -122,12 +122,12 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
     img.onload = () => {
       const render = () => {
         const maxRenderSide = className?.includes("experience-lily")
-          ? 900
+          ? 720
           : className?.includes("projects-dino")
-            ? 920
+            ? 760
             : className?.includes("hero-seagull")
-              ? 860
-              : 1200;
+              ? 520
+              : 960;
         const longestSide = Math.max(img.width, img.height);
         const scale = longestSide > maxRenderSide ? maxRenderSide / longestSide : 1;
         const targetW = Math.max(64, Math.round(img.width * scale));
@@ -157,8 +157,9 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
         ctx.putImageData(imageData, 0, 0);
       };
       const w = window as Window & { requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number; cancelIdleCallback?: (id: number) => void };
-      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: 180 });
-      else timeoutId = window.setTimeout(render, 0);
+      const isHero = Boolean(className?.includes("hero-seagull"));
+      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: isHero ? 1200 : 900 });
+      else timeoutId = window.setTimeout(render, isHero ? 380 : 120);
     };
     img.src = src;
     return () => {
@@ -548,12 +549,11 @@ export default function Home() {
   const [spotify, setSpotify] = useState<SpotifyData>({ isPlaying: false });
   const [menuOpen, setMenuOpen] = useState(false);
   const [randomCity] = useState(() => cities[Math.floor(Math.random() * cities.length)]);
-  const [cursorVisible, setCursorVisible] = useState(false);
-  const [cursorText, setCursorText] = useState("");
   const [activeSection, setActiveSection] = useState("");
   const [showBackToTop, setShowBackToTop] = useState(false);
   const [nightMode, setNightMode] = useState(false);
   const [showBuildNote, setShowBuildNote] = useState(false);
+  const [interactionReady, setInteractionReady] = useState(false);
 
   const skylineRef = useRef<HTMLDivElement>(null);
   const footerEndRef = useRef<HTMLDivElement>(null);
@@ -576,6 +576,26 @@ export default function Home() {
   // Client-only greeting avoids SSR/CSR phrase mismatches and visual stutter.
   useEffect(() => {
     setGreeting(getGreeting());
+  }, []);
+
+  // Delay non-critical warmups until interaction (or a short timeout) to keep first paint smooth.
+  useEffect(() => {
+    let done = false;
+    const activate = () => {
+      if (done) return;
+      done = true;
+      setInteractionReady(true);
+    };
+    const timer = window.setTimeout(activate, 2800);
+    window.addEventListener("pointerdown", activate, { passive: true, once: true });
+    window.addEventListener("keydown", activate, { once: true });
+    window.addEventListener("scroll", activate, { passive: true, once: true });
+    return () => {
+      window.clearTimeout(timer);
+      window.removeEventListener("pointerdown", activate);
+      window.removeEventListener("keydown", activate);
+      window.removeEventListener("scroll", activate);
+    };
   }, []);
 
   const [polaroidStack, setPolaroidStack] = useState<{ id: number; key: string; src: string; caption: string; rotation: number; offsetX: number; offsetY: number; look: PolaroidLook; isNew: boolean }[]>([
@@ -610,6 +630,7 @@ export default function Home() {
 
   // Warm only the first likely drawer interaction; other modals warm on hover/focus.
   useEffect(() => {
+    if (!interactionReady) return;
     let timeoutId: number | null = null;
     let idleId: number | null = null;
     let cancelled = false;
@@ -639,7 +660,7 @@ export default function Home() {
       if (timeoutId !== null) window.clearTimeout(timeoutId);
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
-  }, [ensureDrawerImageDecoded]);
+  }, [ensureDrawerImageDecoded, interactionReady]);
 
   useEffect(() => {
     const hasNew = polaroidStack.some((p) => p.isNew);
@@ -786,7 +807,7 @@ export default function Home() {
       document.body.classList.toggle("custom-cursor-on", mq.matches);
       if (!mq.matches) {
         document.body.classList.remove("custom-cursor-visible");
-        setCursorVisible(false);
+        if (cursorLabelRef.current) cursorLabelRef.current.classList.remove("visible");
       }
     };
     sync();
@@ -812,7 +833,7 @@ export default function Home() {
     };
     const hideSiteCursor = () => {
       document.body.classList.remove("custom-cursor-visible");
-      setCursorVisible(false);
+      if (cursorLabelRef.current) cursorLabelRef.current.classList.remove("visible");
     };
     const flushCursor = () => {
       cursorRafRef.current = 0;
@@ -831,23 +852,22 @@ export default function Home() {
       cursorPendingRef.current = { x: e.clientX, y: e.clientY };
       if (!cursorRafRef.current) cursorRafRef.current = window.requestAnimationFrame(flushCursor);
     };
-    const onPointerOver = () => showSiteCursor();
-    const onPointerOut = (e: PointerEvent) => {
-      if (!e.relatedTarget) hideSiteCursor();
-    };
+    const onRootMouseEnter = () => showSiteCursor();
+    const onRootMouseLeave = () => hideSiteCursor();
     const onVisibilityChange = () => {
       if (document.visibilityState !== "visible") hideSiteCursor();
     };
     const onWindowBlur = () => hideSiteCursor();
+    const rootEl = document.documentElement;
     window.addEventListener("pointermove", onPointerMove, { passive: true });
-    window.addEventListener("pointerover", onPointerOver, true);
-    window.addEventListener("pointerout", onPointerOut, true);
+    rootEl.addEventListener("mouseenter", onRootMouseEnter);
+    rootEl.addEventListener("mouseleave", onRootMouseLeave);
     document.addEventListener("visibilitychange", onVisibilityChange);
     window.addEventListener("blur", onWindowBlur);
     return () => {
       window.removeEventListener("pointermove", onPointerMove);
-      window.removeEventListener("pointerover", onPointerOver, true);
-      window.removeEventListener("pointerout", onPointerOut, true);
+      rootEl.removeEventListener("mouseenter", onRootMouseEnter);
+      rootEl.removeEventListener("mouseleave", onRootMouseLeave);
       document.removeEventListener("visibilitychange", onVisibilityChange);
       window.removeEventListener("blur", onWindowBlur);
       if (cursorRafRef.current) window.cancelAnimationFrame(cursorRafRef.current);
@@ -944,8 +964,17 @@ export default function Home() {
   }, [showBuildNote]);
 
   const scrollTo = (id: string) => { setMenuOpen(false); const section = document.getElementById(id); if (!section) return; const sectionTop = section.getBoundingClientRect().top + window.scrollY; const runwayPadding = parseFloat(getComputedStyle(section).paddingTop) || 114; const targetTop = sectionTop + runwayPadding - 56 - 120; window.scrollTo({ top: Math.max(0, Math.min(targetTop, getMaxScroll())), behavior: "smooth" }); };
-  const showCursor = (t: string) => { setCursorText(t); setCursorVisible(true); };
-  const hideCursor = () => setCursorVisible(false);
+  const showCursor = useCallback((t: string) => {
+    const el = cursorLabelRef.current;
+    if (!el) return;
+    if (el.textContent !== t) el.textContent = t;
+    el.classList.add("visible");
+  }, []);
+  const hideCursor = useCallback(() => {
+    const el = cursorLabelRef.current;
+    if (!el) return;
+    el.classList.remove("visible");
+  }, []);
   const openModalFrom = (modal: ModalData, section: string, e: React.MouseEvent | React.KeyboardEvent) => { drawerTriggerRef.current = e.currentTarget as HTMLElement; openModal(modal, section); };
   const handleCardKey = (e: React.KeyboardEvent, modal: ModalData, section: string) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModalFrom(modal, section, e); } };
 
@@ -1213,7 +1242,7 @@ export default function Home() {
       </div>
 
       <div ref={siteCursorRef} className="site-cursor-plus" aria-hidden="true" />
-      <div ref={cursorLabelRef} className={`cursor-label ${cursorVisible ? "visible" : ""}`} aria-hidden="true">{cursorText}</div>
+      <div ref={cursorLabelRef} className="cursor-label" aria-hidden="true" />
       <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top">Back to top</button>
 
       <NightMode active={nightMode} />
