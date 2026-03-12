@@ -128,11 +128,11 @@ a:hover { opacity: 0.6; }
   z-index: 2;
   isolation: isolate;
   overflow: hidden;
-  background: rgba(245, 240, 232, 0.2);
-  border-bottom: 1px solid rgba(196, 192, 185, 0.55);
+  background: rgba(244, 236, 222, 0.24);
+  border-bottom: 1px solid rgba(178, 165, 148, 0.55);
   box-shadow:
-    0 1px 0 rgba(255, 255, 255, 0.65) inset,
-    0 4px 16px rgba(0, 0, 0, 0.05);
+    0 1px 0 rgba(255, 252, 246, 0.72) inset,
+    0 6px 18px rgba(65, 44, 30, 0.07);
 }
 
 .navbar-bar::before {
@@ -140,7 +140,9 @@ a:hover { opacity: 0.6; }
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background: rgba(245, 240, 232, 0.68);
+  background:
+    linear-gradient(180deg, rgba(201, 138, 52, 0.08) 0%, rgba(155, 80, 51, 0.04) 100%),
+    rgba(244, 236, 222, 0.72);
   backdrop-filter: blur(42px) saturate(180%) brightness(1.04);
   -webkit-backdrop-filter: blur(42px) saturate(180%) brightness(1.04);
   z-index: 0;
@@ -151,10 +153,10 @@ a:hover { opacity: 0.6; }
   position: absolute;
   inset: 0;
   pointer-events: none;
-  background-image: radial-gradient(circle at 1px 1px, rgba(63, 52, 40, 0.12) 0.95px, transparent 1px);
+  background-image: radial-gradient(circle at 1px 1px, rgba(82, 62, 44, 0.15) 0.95px, transparent 1px);
   background-size: 4px 4px;
   mix-blend-mode: multiply;
-  opacity: 0.32;
+  opacity: 0.34;
   z-index: 1;
 }
 
@@ -180,7 +182,7 @@ a:hover { opacity: 0.6; }
   bottom: -1px;
   width: 100%;
   height: 2px;
-  background: rgba(55, 46, 40, 0.08);
+  background: rgba(64, 45, 32, 0.12);
   overflow: hidden;
 }
 .scroll-progress-fill {
@@ -189,14 +191,14 @@ a:hover { opacity: 0.6; }
   height: 100%;
   transform: scaleX(0);
   transform-origin: left center;
-  background: linear-gradient(90deg, #b86f42 0%, #ce944e 100%);
+  background: linear-gradient(90deg, #9b5033 0%, #c98a34 100%);
   transition: transform 0.15s ease;
   will-change: transform;
 }
 
 @supports not ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
   .navbar-bar {
-    background: rgba(245, 240, 232, 0.97);
+    background: rgba(244, 236, 222, 0.97);
   }
   .navbar-bar::before {
     display: none;
@@ -240,20 +242,22 @@ a:hover { opacity: 0.6; }
 
 .mobile-menu {
   display: none; position: fixed; top: 52px; left: 0; width: 100%;
-  background: rgba(243, 238, 232, 0.74);
+  background:
+    linear-gradient(180deg, rgba(201, 138, 52, 0.09) 0%, rgba(155, 80, 51, 0.04) 100%),
+    rgba(244, 236, 222, 0.8);
   backdrop-filter: blur(40px) saturate(180%);
   -webkit-backdrop-filter: blur(40px) saturate(180%);
   -webkit-transform: translateZ(0);
   transform: translateZ(0);
-  border-bottom: 1px solid rgba(196, 192, 185, 0.5);
-  box-shadow: 0 4px 30px rgba(0, 0, 0, 0.05);
+  border-bottom: 1px solid rgba(178, 165, 148, 0.52);
+  box-shadow: 0 6px 28px rgba(65, 44, 30, 0.08);
   padding: 1rem 1.5rem; z-index: 499; animation: fadeIn 0.2s ease;
 }
 .mobile-menu.open { display: block; }
 
 @supports not (backdrop-filter: blur(20px)) {
   .mobile-menu {
-    background: rgba(247, 245, 242, 0.95);
+    background: rgba(244, 236, 222, 0.96);
   }
 }
 
