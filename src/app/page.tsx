@@ -868,12 +868,12 @@ export default function Home() {
         <div className="navbar-bar">
           <div className="navbar-inner">
             <a href="#top" className="navbar-name" onClick={(e) => { e.preventDefault(); setMenuOpen(false); window.scrollTo({ top: 0, behavior: "smooth" }); }}>
-              <img src="/hirono-nav.png" alt="Sahas Sharma — home" style={{ height: "28px", width: "auto", display: "block" }} />
+              <img src="/hirono-nav.png" alt="Sahas Sharma — home" style={{ height: "32px", width: "auto", display: "block" }} />
             </a>
             <div className="navbar-links" role="list">
               <button role="listitem" className={`navbar-link ${activeSection === "experience" ? "active" : ""}`} onClick={() => scrollTo("experience")}>Experience</button>
               <button role="listitem" className={`navbar-link ${activeSection === "projects" ? "active" : ""}`} onClick={() => scrollTo("projects")}>Projects</button>
-              <a role="listitem" href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="navbar-link">Resume</a>
+              <a role="listitem" href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="navbar-link">Résumé</a>
               <a role="listitem" href="https://www.linkedin.com/in/sahassharma/" target="_blank" rel="noopener noreferrer" className="navbar-link">LinkedIn</a>
             </div>
             <button className={`hamburger ${menuOpen ? "open" : ""}`} onClick={() => setMenuOpen(!menuOpen)} aria-label="Menu" aria-expanded={menuOpen}>
@@ -889,7 +889,7 @@ export default function Home() {
         <div className="mobile-menu-grid">
           <button role="menuitem" className="mobile-menu-link" onClick={() => scrollTo("experience")}>Experience</button>
           <button role="menuitem" className="mobile-menu-link" onClick={() => scrollTo("projects")}>Projects</button>
-          <a role="menuitem" href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>Resume</a>
+          <a role="menuitem" href="/resume.pdf" target="_blank" rel="noopener noreferrer" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>Résumé</a>
           <a role="menuitem" href="https://www.linkedin.com/in/sahassharma/" target="_blank" rel="noopener noreferrer" className="mobile-menu-link" onClick={() => setMenuOpen(false)}>LinkedIn</a>
         </div>
       </div>
@@ -933,7 +933,7 @@ export default function Home() {
                   <div className="about-container">
                     <div className="about-text about-text-reveal">
                       <p className="body-text">{"Originally from "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "bombay") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("bombay", "/mumbai.jpg", "eating a gola")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("bombay", "/mumbai.jpg", "eating a gola"); } }}>Bombay</span>{", raised in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "jc") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("jc", "/jersey.jpg", "jersey city, nj")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("jc", "/jersey.jpg", "jersey city, nj"); } }}>Jersey City</span>{", and now based in "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dallas") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dallas", "/dallas.jpg", "dallas, tx")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dallas", "/dallas.jpg", "dallas, tx"); } }}>Dallas, Texas</span>{", I've called a lot of places home. I'm a computer science student at "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "utd") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("utd", "/utdallas.jpg", "ut dallas")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("utd", "/utdallas.jpg", "ut dallas"); } }}>UT Dallas</span>{" on the AI track, with a deep interest in machine learning and the systems that power it."}</p>
-                      <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs,"}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.jpg", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.jpg", "idris & ling 🐾"); } }}> Idris and Ling</span>{", and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
+                      <p className="body-text" style={{ marginTop: "0.75rem" }}>{"Outside of work, I help care for two service dogs, "}<span className={`about-keyword ${polaroidStack.some(p => p.key === "dogs") ? "about-keyword-active" : ""}`} onClick={() => togglePolaroid("dogs", "/idris-ling.jpg", "idris & ling 🐾")} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid("dogs", "/idris-ling.jpg", "idris & ling 🐾"); } }}>Idris and Ling</span>{", and try to lead with kindness in everything I do. I believe the best technology is built by people who care about other people."}</p>
                       <p className="about-monthly-quote"><span className="about-monthly-quote-label">{monthlyQuote.monthLabel}:</span>{" "}<span className={`about-monthly-quote-link ${polaroidStack.some((p) => p.key === monthlyQuote.polaroidKey) ? "about-monthly-quote-link-active" : ""}`} onClick={() => togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption)} role="button" tabIndex={0} onKeyDown={(e) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); togglePolaroid(monthlyQuote.polaroidKey, monthlyQuote.polaroidSrc, monthlyQuote.polaroidCaption); } }}>&ldquo;{monthlyQuote.text}&rdquo;</span></p>
                     </div>
                     <div className="polaroid-wrapper polaroid-drop-reveal" aria-hidden="true">
