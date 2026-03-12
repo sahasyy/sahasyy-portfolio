@@ -49,6 +49,7 @@ html {
   scroll-padding-top: 80px;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  -webkit-text-size-adjust: 100%;
   overscroll-behavior: none;
 }
 
@@ -66,6 +67,7 @@ body {
   background-position: 0 0, 0 0, 2px 2px;
   width: 100%;
   max-width: 100vw;
+  overflow-x: hidden;
   overflow-x: clip;
   overscroll-behavior: none;
   height: 100%;
@@ -298,6 +300,7 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
   width: 100%;
   padding: 7.1rem 0;
   background: transparent;
+  overflow: hidden;
   overflow: clip;
 }
 .scroll-runway.runway-footer {
@@ -348,11 +351,13 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 
 /* --- Hero --- */
 .section-hero {
+  min-height: 100vh;
   min-height: 100dvh;
   padding: 0;
   display: flex;
   align-items: center;
   position: relative;
+  overflow: hidden;
   overflow: clip;
 }
 .section-hero .sticky-panel {
@@ -618,6 +623,10 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 .polaroid-image-wrapper {
   position: relative;
   overflow: hidden;
+  isolation: isolate;
+  -webkit-transform: translateZ(0);
+  transform: translateZ(0);
+  backface-visibility: hidden;
   box-shadow:
     inset 0 0 0 1px rgba(78, 59, 42, 0.16),
     inset 0 12px 16px rgba(255, 247, 235, 0.25),
@@ -1110,6 +1119,7 @@ html { scroll-behavior: smooth; -webkit-overflow-scrolling: touch; }
 .build-note-modal-card {
   width: min(420px, calc(100vw - 2rem));
   aspect-ratio: 1 / 1;
+  max-height: min(420px, calc(100vh - 2rem));
   max-height: min(420px, calc(100svh - 2rem));
   overflow-y: auto;
   transform: scale(0.96);
@@ -1296,6 +1306,18 @@ body.night-mode .city-skyline { filter: none; opacity: 0.5; mix-blend-mode: norm
 body.night-mode .skip-link { background: #f7f5f2; color: #1a1a1a; }
 body.night-mode *:focus-visible { outline-color: #f0a860; }
 
+/* Safari tuning for blend-heavy overlays */
+@supports (-webkit-touch-callout: none) {
+  .polaroid.polaroid-look-saffron .polaroid-image-wrapper::before,
+  .polaroid.polaroid-look-punch .polaroid-image-wrapper::before {
+    mix-blend-mode: screen;
+  }
+  .polaroid.polaroid-look-saffron .polaroid-image-wrapper::after,
+  .polaroid.polaroid-look-punch .polaroid-image-wrapper::after {
+    opacity: 0.74;
+  }
+}
+
 @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.4; } }
 @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
@@ -1340,10 +1362,10 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .greeting, .hero-name { font-size: 38px; }
   .hero-copy { padding-right: 0; }
   .hero-seagull { display: none; }
-  .symbol-banner { height: 52svh; }
+  .symbol-banner { height: 52vh; height: 52svh; }
   .scroll-runway { padding: 4.9rem 0; }
   .section-inner { padding: 0 1.25rem; }
-  .section-hero { min-height: 100svh; padding: 0; }
+  .section-hero { min-height: 100vh; min-height: 100svh; padding: 0; }
   .section-hero .section-inner { padding-top: 48vh; }
   .scroll-hint { bottom: -5.4rem; }
   .runway-footer { padding: 8rem 0 0; }
