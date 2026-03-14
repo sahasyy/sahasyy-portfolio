@@ -490,7 +490,12 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
       title: "Cooking", subtitle: "Tasting flavors from everywhere", image: "/cooking.jpg",
       preloadImages: ["/cooking.jpg"],
       imageClassName: "modal-image-cooking",
-      body: (<p className="modal-body">{"I grew up around incredible food, my mom's cooking, Bombay street food, NYC Pizza, food adventures in Texas. Cooking is how I stay connected to all these places. I love the improvasation to it. There's something deeply satisfying about feeding people something you made."}</p>),
+      body: (
+        <>
+          <p className="modal-body">{"I grew up around incredible food, my mom's cooking, Bombay street food, NYC Pizza, food adventures in Texas. Cooking is how I stay connected to all these places. I love the improvisation to it. There's something deeply satisfying about feeding people something you made."}</p>
+          <p className="modal-body">{"I also love doing my research before I travel so I can find the best spots to eat ahead of time. If you're interested in seeing more, check out my Beli account: @sahasyy."}</p>
+        </>
+      ),
       links: [],
     },
   },
