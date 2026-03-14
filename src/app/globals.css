@@ -1442,3 +1442,282 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .build-note { text-align: left; }
   .footer-webring { justify-content: center; justify-self: center; }
 }
+
+/* iOS Safari rasterizes fractional dashed borders inconsistently on mobile. */
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 700px) {
+    :root {
+      --ios-dash-length: 5px;
+      --ios-dash-gap: 4px;
+      --ios-dot-length: 1px;
+      --ios-dot-gap: 4px;
+    }
+
+    .section-divider,
+    .project-route {
+      border-top: 0;
+      height: 1px;
+      background-image: repeating-linear-gradient(
+        90deg,
+        currentColor 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-repeat: repeat-x;
+      background-size: auto 1px;
+      background-position: left center;
+    }
+
+    .section-divider {
+      color: var(--color-border);
+    }
+
+    .project-route {
+      color: rgba(163, 91, 60, 0.34);
+    }
+
+    .mobile-menu-link,
+    .experience-grid,
+    .project-grid,
+    .human-grid,
+    .modal-close,
+    .modal-link,
+    .build-note,
+    .build-note-close,
+    .webring-arrow-link,
+    .webring-logo-link {
+      position: relative;
+      border: 0;
+    }
+
+    .mobile-menu-link::after,
+    .experience-grid::after,
+    .project-grid::after,
+    .human-grid::after,
+    .modal-close::after,
+    .modal-link::after,
+    .build-note::after,
+    .build-note-close::after,
+    .webring-arrow-link::after,
+    .webring-logo-link::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          var(--color-border) 0 var(--ios-dash-length),
+          transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+        ),
+        repeating-linear-gradient(
+          180deg,
+          var(--color-border) 0 var(--ios-dash-length),
+          transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+        ),
+        repeating-linear-gradient(
+          90deg,
+          var(--color-border) 0 var(--ios-dash-length),
+          transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+        ),
+        repeating-linear-gradient(
+          180deg,
+          var(--color-border) 0 var(--ios-dash-length),
+          transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+        );
+      background-size: 100% 1px, 1px 100%, 100% 1px, 1px 100%;
+      background-position: left top, right top, left bottom, left top;
+      background-repeat: repeat-x, repeat-y, repeat-x, repeat-y;
+    }
+
+    .experience-card,
+    .project-card,
+    .human-card,
+    .drawer,
+    .drawer-frame,
+    .human-note,
+    .modal-links {
+      position: relative;
+    }
+
+    .experience-card {
+      border-bottom: 0;
+    }
+
+    .experience-card::after {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      height: 1px;
+      pointer-events: none;
+      z-index: 0;
+      background-image: repeating-linear-gradient(
+        90deg,
+        var(--color-border) 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-repeat: repeat-x;
+      background-size: auto 1px;
+    }
+
+    .experience-card:last-child::after {
+      display: none;
+    }
+
+    .project-card,
+    .human-card {
+      border-right: 0;
+      border-bottom: 0;
+    }
+
+    .project-card::after,
+    .human-card::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        repeating-linear-gradient(
+          180deg,
+          var(--color-border) 0 var(--ios-dash-length),
+          transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+        ),
+        repeating-linear-gradient(
+          90deg,
+          var(--color-border) 0 var(--ios-dash-length),
+          transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+        );
+      background-size: 1px 100%, 100% 1px;
+      background-position: right top, left bottom;
+      background-repeat: repeat-y, repeat-x;
+    }
+
+    .project-card:nth-child(2n)::after,
+    .human-card:nth-child(2n)::after {
+      background-image: repeating-linear-gradient(
+        90deg,
+        var(--color-border) 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-size: 100% 1px;
+      background-position: left bottom;
+      background-repeat: repeat-x;
+    }
+
+    .project-card:nth-last-child(-n+2)::after {
+      background-image: repeating-linear-gradient(
+        180deg,
+        var(--color-border) 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-size: 1px 100%;
+      background-position: right top;
+      background-repeat: repeat-y;
+    }
+
+    .project-card:nth-last-child(-n+2):nth-child(2n)::after {
+      background-image: none;
+    }
+
+    .human-card:nth-child(n+3)::after {
+      background-image: repeating-linear-gradient(
+        180deg,
+        var(--color-border) 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-size: 1px 100%;
+      background-position: right top;
+      background-repeat: repeat-y;
+    }
+
+    .human-card:nth-child(n+3):nth-child(2n)::after {
+      background-image: none;
+    }
+
+    .drawer {
+      border-left: 0;
+    }
+
+    .drawer::before {
+      content: "";
+      position: absolute;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      width: 1px;
+      pointer-events: none;
+      z-index: 2;
+      background-image: repeating-linear-gradient(
+        180deg,
+        var(--color-border) 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-repeat: repeat-y;
+      background-size: 1px auto;
+    }
+
+    .drawer-frame {
+      border-top: 0;
+      border-left: 0;
+    }
+
+    .drawer-frame::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background-image:
+        repeating-linear-gradient(
+          90deg,
+          var(--color-border) 0 var(--ios-dot-length),
+          transparent var(--ios-dot-length) calc(var(--ios-dot-length) + var(--ios-dot-gap))
+        ),
+        repeating-linear-gradient(
+          180deg,
+          var(--color-border) 0 var(--ios-dot-length),
+          transparent var(--ios-dot-length) calc(var(--ios-dot-length) + var(--ios-dot-gap))
+        );
+      background-size: 100% 1px, 1px 100%;
+      background-position: left top, left top;
+      background-repeat: repeat-x, repeat-y;
+    }
+
+    .human-note,
+    .modal-links {
+      border-bottom: 0;
+      border-top: 0;
+    }
+
+    .human-note {
+      background-image: repeating-linear-gradient(
+        90deg,
+        var(--color-border) 0 var(--ios-dot-length),
+        transparent var(--ios-dot-length) calc(var(--ios-dot-length) + var(--ios-dot-gap))
+      );
+      background-repeat: repeat-x;
+      background-size: auto 1px;
+      background-position: left calc(100% - 1px);
+    }
+
+    .modal-links::before {
+      content: "";
+      position: absolute;
+      left: 0;
+      right: 0;
+      top: 0;
+      height: 1px;
+      pointer-events: none;
+      background-image: repeating-linear-gradient(
+        90deg,
+        var(--color-border) 0 var(--ios-dash-length),
+        transparent var(--ios-dash-length) calc(var(--ios-dash-length) + var(--ios-dash-gap))
+      );
+      background-repeat: repeat-x;
+      background-size: auto 1px;
+    }
+  }
+}
