@@ -4,8 +4,42 @@ import { useEffect, useState, useRef, useCallback } from "react";
 import NightMode from "./NightMode";
 import ScrollRevealText from "./ScrollRevealText";
 
+type ConnectionTier = "fast" | "standard" | "constrained";
+type BrowserConnection = {
+  saveData?: boolean;
+  effectiveType?: string;
+  downlink?: number;
+  addEventListener?: (type: "change", listener: () => void) => void;
+  removeEventListener?: (type: "change", listener: () => void) => void;
+  onchange?: (() => void) | null;
+};
 
-function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean }) {
+function getBrowserConnection(): BrowserConnection | null {
+  if (typeof navigator === "undefined") return null;
+  const nav = navigator as Navigator & {
+    connection?: BrowserConnection;
+    mozConnection?: BrowserConnection;
+    webkitConnection?: BrowserConnection;
+  };
+  return nav.connection ?? nav.mozConnection ?? nav.webkitConnection ?? null;
+}
+
+function getConnectionTier(connection: BrowserConnection | null): ConnectionTier {
+  if (!connection) return "standard";
+  if (connection.saveData) return "constrained";
+  const effectiveType = connection.effectiveType ?? "";
+  const downlink = connection.downlink ?? 10;
+  if (effectiveType.includes("2g") || effectiveType === "3g" || downlink < 1.5) {
+    return "constrained";
+  }
+  if (effectiveType === "4g" && downlink >= 5) {
+    return "fast";
+  }
+  return "standard";
+}
+
+
+function DitheredSkyline({ src, nightMode, reducedDetail = false }: { src: string; nightMode?: boolean; reducedDetail?: boolean }) {
   const wrapperRef = useRef<HTMLDivElement>(null);
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
@@ -24,11 +58,11 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
           observer.disconnect();
         }
       },
-      { rootMargin: "520px 0px" },
+      { rootMargin: reducedDetail ? "220px 0px" : "520px 0px" },
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, []);
+  }, [reducedDetail]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -42,7 +76,7 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
     img.crossOrigin = "anonymous";
     img.onload = () => {
       const render = () => {
-        const maxWidth = 1200;
+        const maxWidth = reducedDetail ? 820 : 1200;
         const scale = img.width > maxWidth ? maxWidth / img.width : 1;
         const targetW = Math.max(300, Math.round(img.width * scale));
         const targetH = Math.max(80, Math.round(img.height * scale));
@@ -70,8 +104,8 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
         ctx.putImageData(imageData, 0, 0);
       };
       const w = window as Window & { requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number; cancelIdleCallback?: (id: number) => void };
-      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: 1400 });
-      else timeoutId = window.setTimeout(render, 220);
+      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: reducedDetail ? 900 : 1400 });
+      else timeoutId = window.setTimeout(render, reducedDetail ? 140 : 220);
     };
     img.src = src;
     return () => {
@@ -80,11 +114,11 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
       const w = window as Window & { cancelIdleCallback?: (id: number) => void };
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
-  }, [src, nightMode, shouldRender]);
+  }, [src, nightMode, reducedDetail, shouldRender]);
   return <div className="city-skyline-wrapper" ref={wrapperRef}><canvas ref={canvasRef} className="city-skyline" /></div>;
 }
 
-function DitheredStill({ src, className, nightMode }: { src: string; className?: string; nightMode?: boolean }) {
+function DitheredStill({ src, className, nightMode, reducedDetail = false }: { src: string; className?: string; nightMode?: boolean; reducedDetail?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
 
@@ -95,7 +129,9 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
       const timeoutId = window.setTimeout(() => setShouldRender(true), 0);
       return () => window.clearTimeout(timeoutId);
     }
-    const rootMargin = className?.includes("hero-seagull") ? "260px 0px" : "420px 0px";
+    const rootMargin = className?.includes("hero-seagull")
+      ? (reducedDetail ? "140px 0px" : "260px 0px")
+      : (reducedDetail ? "180px 0px" : "420px 0px");
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries.some((entry) => entry.isIntersecting)) {
@@ -107,7 +143,7 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
     );
     observer.observe(el);
     return () => observer.disconnect();
-  }, [className]);
+  }, [className, reducedDetail]);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -122,12 +158,12 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
     img.onload = () => {
       const render = () => {
         const maxRenderSide = className?.includes("experience-lily")
-          ? 720
+          ? (reducedDetail ? 520 : 720)
           : className?.includes("projects-dino")
-            ? 760
+            ? (reducedDetail ? 560 : 760)
             : className?.includes("hero-seagull")
-              ? 520
-              : 960;
+              ? (reducedDetail ? 420 : 520)
+              : (reducedDetail ? 720 : 960);
         const longestSide = Math.max(img.width, img.height);
         const scale = longestSide > maxRenderSide ? maxRenderSide / longestSide : 1;
         const targetW = Math.max(64, Math.round(img.width * scale));
@@ -158,8 +194,8 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
       };
       const w = window as Window & { requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number; cancelIdleCallback?: (id: number) => void };
       const isHero = Boolean(className?.includes("hero-seagull"));
-      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: isHero ? 1200 : 900 });
-      else timeoutId = window.setTimeout(render, isHero ? 380 : 120);
+      if (w.requestIdleCallback) idleId = w.requestIdleCallback(() => render(), { timeout: isHero ? (reducedDetail ? 850 : 1200) : (reducedDetail ? 700 : 900) });
+      else timeoutId = window.setTimeout(render, isHero ? (reducedDetail ? 240 : 380) : (reducedDetail ? 90 : 120));
     };
     img.src = src;
     return () => {
@@ -168,13 +204,16 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
       const w = window as Window & { cancelIdleCallback?: (id: number) => void };
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
-  }, [src, nightMode, className, shouldRender]);
+  }, [src, nightMode, className, reducedDetail, shouldRender]);
   return <canvas ref={canvasRef} className={className} />;
 }
 
 const cities = [
-  { src: "/city-nyc-opt.png" }, { src: "/city-jerseycity.png" },
-  { src: "/city-chicago.png" }, { src: "/city-mumbai.png" }, { src: "/city-dallas.png" },
+  { src: "/city-nyc-opt.png", lowSrc: "/city-nyc-opt-low.webp" },
+  { src: "/city-jerseycity.png", lowSrc: "/city-jerseycity-low.webp" },
+  { src: "/city-chicago.png", lowSrc: "/city-chicago-low.webp" },
+  { src: "/city-mumbai.png", lowSrc: "/city-mumbai-low.webp" },
+  { src: "/city-dallas.png", lowSrc: "/city-dallas-low.webp" },
 ];
 const KONAMI_CODE = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
@@ -259,7 +298,7 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
       body: (
         <>
           <div className="modal-split">
-            <img src="/hackutd2-drawer.jpg" alt="HackUTD event" className="modal-split-image" loading="eager" fetchPriority="high" decoding="async" />
+            <img src="/hackutd2-drawer.jpg" alt="HackUTD event" className="modal-split-image" loading="eager" decoding="async" />
             <div className="modal-split-text">
               <h3 className="modal-section-title">The Tavern & Point System</h3>
               <p className="modal-body">
@@ -451,7 +490,7 @@ const projects: { name: string; tag: string; tech: string; image: string; modal:
     },
   },
   {
-    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell.jpg",
+    name: "Fingertip Fluency", tag: "1st Place Best Research", tech: "Conformer · ASL · ML", image: "/fingerspell-card.webp",
     modal: {
       title: "Fingertip Fluency", subtitle: "1st Place Best Research · ACM Research Symposium", image: "/fingertip-modal.jpg",
       preloadImages: ["/fingertip-modal.jpg"],
@@ -559,6 +598,7 @@ export default function Home() {
   const [nightMode, setNightMode] = useState(false);
   const [showBuildNote, setShowBuildNote] = useState(false);
   const [interactionReady, setInteractionReady] = useState(false);
+  const [networkTier, setNetworkTier] = useState<ConnectionTier>(() => getConnectionTier(getBrowserConnection()));
 
   const skylineRef = useRef<HTMLDivElement>(null);
   const footerEndRef = useRef<HTMLDivElement>(null);
@@ -577,10 +617,37 @@ export default function Home() {
   const decodedDrawerImagesRef = useRef<Set<string>>(new Set());
   const [drawerImageReady, setDrawerImageReady] = useState(false);
   const [drawerBodyReady, setDrawerBodyReady] = useState(false);
+  const reducedVisualDetail = networkTier === "constrained";
+  const heroSeagullSrc = reducedVisualDetail ? "/seagull-low.webp" : "/seagull.png";
+  const experienceLilySrc = reducedVisualDetail ? "/lily-lite-low.webp" : "/lily-lite.png";
+  const projectsDinoSrc = reducedVisualDetail ? "/dino-low.webp" : "/dino.png";
+  const skylineSrc = nightMode
+    ? (reducedVisualDetail ? "/earth-low.webp" : "/earth.png")
+    : (reducedVisualDetail ? randomCity.lowSrc : randomCity.src);
+  const moonSrc = reducedVisualDetail ? "/moon-low.webp" : "/moon.png";
 
   // Client-only greeting avoids SSR/CSR phrase mismatches and visual stutter.
   useEffect(() => {
     setGreeting(getGreeting());
+  }, []);
+
+  useEffect(() => {
+    const connection = getBrowserConnection();
+    const applyTier = () => setNetworkTier(getConnectionTier(connection));
+    applyTier();
+    if (!connection) return;
+    if (typeof connection.addEventListener === "function") {
+      connection.addEventListener("change", applyTier);
+      return () => connection.removeEventListener?.("change", applyTier);
+    }
+    const previousOnChange = connection.onchange ?? null;
+    connection.onchange = () => {
+      if (previousOnChange) previousOnChange();
+      applyTier();
+    };
+    return () => {
+      connection.onchange = previousOnChange;
+    };
   }, []);
 
   // Delay non-critical warmups until interaction (or a short timeout) to keep first paint smooth.
@@ -629,13 +696,15 @@ export default function Home() {
   }, []);
 
   const warmModalAssets = useCallback((modal: ModalData) => {
-    const targets = [modal.image, ...(modal.preloadImages ?? [])].filter(Boolean);
+    if (networkTier === "constrained") return;
+    const secondaryTargets = networkTier === "fast" ? (modal.preloadImages ?? []) : [];
+    const targets = [modal.image, ...secondaryTargets].filter(Boolean);
     targets.forEach((src) => { void ensureDrawerImageDecoded(src); });
-  }, [ensureDrawerImageDecoded]);
+  }, [ensureDrawerImageDecoded, networkTier]);
 
   // Warm only the first likely drawer interaction; other modals warm on hover/focus.
   useEffect(() => {
-    if (!interactionReady) return;
+    if (!interactionReady || networkTier !== "fast") return;
     let timeoutId: number | null = null;
     let idleId: number | null = null;
     let cancelled = false;
@@ -665,7 +734,7 @@ export default function Home() {
       if (timeoutId !== null) window.clearTimeout(timeoutId);
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
-  }, [ensureDrawerImageDecoded, interactionReady]);
+  }, [ensureDrawerImageDecoded, interactionReady, networkTier]);
 
   useEffect(() => {
     const hasNew = polaroidStack.some((p) => p.isNew);
@@ -896,23 +965,28 @@ export default function Home() {
       setDrawerBodyReady(false);
       return;
     }
-    const decodeTargets = [activeModal.image, ...(activeModal.preloadImages ?? [])].filter(Boolean);
-    const uniqueTargets = [...new Set(decodeTargets)];
     setDrawerImageReady(false);
     setDrawerBodyReady(false);
     let cancelled = false;
-    Promise.all(uniqueTargets.map((src) => ensureDrawerImageDecoded(src))).then(() => {
+    const showPrimaryImage = async () => {
+      await ensureDrawerImageDecoded(activeModal.image);
       if (cancelled) return;
       setDrawerImageReady(true);
-      // let drawer animation settle first frame before heavy content paints
       requestAnimationFrame(() => {
         if (!cancelled) setDrawerBodyReady(true);
       });
-    });
+      const extraTargets = networkTier === "fast"
+        ? [...new Set(activeModal.preloadImages ?? [])]
+        : [];
+      if (extraTargets.length > 0) {
+        void Promise.all(extraTargets.map((src) => ensureDrawerImageDecoded(src)));
+      }
+    };
+    void showPrimaryImage();
     return () => {
       cancelled = true;
     };
-  }, [activeModal, ensureDrawerImageDecoded]);
+  }, [activeModal, ensureDrawerImageDecoded, networkTier]);
 
   useEffect(() => {
     if (!activeModal && !showBuildNote) {
@@ -1045,7 +1119,7 @@ export default function Home() {
                     </div>
                     <div className="hero-line hero-line-2"><h1 className="hero-name" onMouseMove={handleMouseMove}>{"I'm "}<span ref={nameRef} className="gradient-name">Sahas Sharma.</span></h1></div>
                   </div>
-                  <div className="hero-seagull" aria-hidden="true"><DitheredStill src="/seagull.png" className="hero-seagull-canvas" nightMode={nightMode} /></div>
+                  <div className="hero-seagull" aria-hidden="true"><DitheredStill src={heroSeagullSrc} className="hero-seagull-canvas" nightMode={nightMode} reducedDetail={reducedVisualDetail} /></div>
                 </div>
               </section>
             </div>
@@ -1089,7 +1163,7 @@ export default function Home() {
             <div className="section-inner">
               <section aria-label="Work experience" className="experience-section-wrap">
                 <div className={`experience-lily ${sectionRevealed.experience ? "revealed" : ""}`} aria-hidden="true">
-                  <DitheredStill src="/lily-lite.png" className="experience-lily-canvas" nightMode={nightMode} />
+                  <DitheredStill src={experienceLilySrc} className="experience-lily-canvas" nightMode={nightMode} reducedDetail={reducedVisualDetail} />
                 </div>
                 <ScrollRevealText text="Experience" className="section-title" startSize={140} endSize={52} onProgress={handleSectionProgress("experience")} />
                 <div className={`section-content ${sectionRevealed.experience ? "revealed" : ""}`}>
@@ -1119,7 +1193,7 @@ export default function Home() {
                 <div className={`section-content ${sectionRevealed.projects ? "revealed" : ""}`}>
                   <div className="project-grid-wrap">
                     <div className={`projects-dino ${sectionRevealed.projects ? "revealed" : ""}`} aria-hidden="true">
-                      <DitheredStill src="/dino.png" className="projects-dino-canvas" nightMode={nightMode} />
+                      <DitheredStill src={projectsDinoSrc} className="projects-dino-canvas" nightMode={nightMode} reducedDetail={reducedVisualDetail} />
                     </div>
                     <div className={`project-route-lines ${sectionRevealed.projects ? "revealed" : ""}`} aria-hidden="true">
                       <span className="project-route route-a" />
@@ -1187,7 +1261,7 @@ export default function Home() {
               </div>
               <div className="footer-webring"><a href="https://cs.utdring.com/#sahassharma.com?nav=prev" className="webring-arrow-link" aria-label="Previous in CS Webring">←</a><a href="https://cs.utdring.com/#sahassharma.com" target="_blank" rel="noopener noreferrer" className="webring-logo-link"><img src="https://cs.utdring.com/icon.black.svg" alt="CS Webring" className="webring-logo" loading="lazy" decoding="async" /></a><a href="https://cs.utdring.com/#sahassharma.com?nav=next" className="webring-arrow-link" aria-label="Next in CS Webring">→</a></div>
             </div>
-            <div className="skyline-full-bleed" ref={skylineRef} aria-hidden="true"><DitheredSkyline src={nightMode ? "/earth.png" : randomCity.src} nightMode={nightMode} /></div>
+            <div className="skyline-full-bleed" ref={skylineRef} aria-hidden="true"><DitheredSkyline src={skylineSrc} nightMode={nightMode} reducedDetail={reducedVisualDetail} /></div>
             <div ref={footerEndRef} aria-hidden="true" />
           </footer>
         </div>
@@ -1250,7 +1324,7 @@ export default function Home() {
       <div ref={cursorLabelRef} className="cursor-label" aria-hidden="true" />
       <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top">Back to top</button>
 
-      <NightMode active={nightMode} />
+      <NightMode active={nightMode} moonSrc={moonSrc} />
     </>
   );
 }
