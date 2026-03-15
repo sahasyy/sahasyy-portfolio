@@ -1410,6 +1410,13 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .section-experience { margin-top: 2.8rem; }
   .experience-lily { width: clamp(140px, 36vw, 220px); top: -2.1rem; right: 0.15rem; }
   .project-grid { grid-template-columns: repeat(2, 1fr); }
+  .project-card-content { min-width: 0; }
+  .project-name {
+    max-width: 100%;
+    overflow-wrap: anywhere;
+    word-break: break-word;
+    line-height: 1.08;
+  }
   .projects-dino { left: -0.1rem; bottom: -8.1rem; width: clamp(300px, 68vw, 500px); }
   .project-route-lines { opacity: 0.32; }
   .route-a { width: 40%; left: 6%; top: 38%; transform: rotate(-10deg); }
