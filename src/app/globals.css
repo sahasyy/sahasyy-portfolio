@@ -1388,6 +1388,11 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
 }
 
 @media (max-width: 700px) {
+  html, body, main {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
   .navbar-links { display: none; }
   .hamburger { display: flex; }
   .greeting, .hero-name { font-size: 38px; }
@@ -1399,7 +1404,7 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .section-hero { min-height: 100vh; min-height: 100svh; padding: 0; }
   .section-hero .section-inner { padding-top: 48vh; }
   .scroll-hint { bottom: -5.4rem; }
-  .runway-footer { padding: 8rem 0 0; }
+  .runway-footer { padding: 6.5rem 0 0; }
   .section-title { max-width: 100%; }
   .about-container { flex-direction: column-reverse; gap: 1.5rem; align-items: center; }
   .polaroid-wrapper { margin-top: 0; }
@@ -1426,6 +1431,18 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .project-card:nth-last-child(-n+3) { border-bottom: 1.5px dashed var(--color-border); }
   .project-card:nth-last-child(-n+2) { border-bottom: none; }
   .human-grid { grid-template-columns: repeat(2, 1fr); }
+  .section-projects .sticky-panel,
+  .section-footer,
+  .footer,
+  .skyline-full-bleed,
+  .city-skyline-wrapper {
+    width: 100%;
+    max-width: 100%;
+    overflow-x: hidden;
+  }
+  .footer { overflow: hidden; }
+  .skyline-full-bleed { margin-top: 0.75rem; }
+  .city-skyline { width: 100%; max-width: 100%; vertical-align: bottom; }
   .site-cursor-plus { display: none; }
   .cursor-label { display: none; }
   body.custom-cursor-on,
