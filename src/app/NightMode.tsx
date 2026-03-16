@@ -61,7 +61,7 @@ interface BGStar {
   twinkleSpeed: number; twinkleOffset: number;
 }
 
-export default function NightMode({ active, moonSrc = "/moon.png" }: { active: boolean; moonSrc?: string }) {
+export default function NightMode({ active }: { active: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const animRef = useRef<number>(0);
   const bgStarsRef = useRef<BGStar[]>([]);
@@ -146,8 +146,8 @@ export default function NightMode({ active, moonSrc = "/moon.png" }: { active: b
       cx.putImageData(imageData, 0, 0);
       moonCanvasRef.current = c;
     };
-    img.src = moonSrc;
-  }, [active, moonSrc]);
+    img.src = "/moon.png";
+  }, [active]);
 
   useEffect(() => {
     if (!active) { if (animRef.current) cancelAnimationFrame(animRef.current); return; }
