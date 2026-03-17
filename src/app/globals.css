@@ -1442,3 +1442,44 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .build-note { text-align: left; }
   .footer-webring { justify-content: center; justify-self: center; }
 }
+
+@supports (-webkit-touch-callout: none) {
+  @media (max-width: 700px) {
+    .project-grid {
+      position: relative;
+      isolation: isolate;
+    }
+
+    .project-card {
+      border-right-color: transparent;
+    }
+
+    .project-grid::before {
+      content: "";
+      position: absolute;
+      top: 1px;
+      left: calc(50% - 1px);
+      bottom: 1px;
+      width: 2px;
+      pointer-events: none;
+      z-index: 3;
+      opacity: 0.95;
+      background-image: repeating-linear-gradient(
+        180deg,
+        rgba(106, 96, 86, 0.28) 0 6px,
+        transparent 6px 10px
+      );
+      background-repeat: repeat-y;
+      background-size: 2px 10px;
+      transform: translateZ(0);
+    }
+
+    body.night-mode .project-grid::before {
+      background-image: repeating-linear-gradient(
+        180deg,
+        rgba(214, 214, 214, 0.28) 0 6px,
+        transparent 6px 10px
+      );
+    }
+  }
+}
