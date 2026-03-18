@@ -1445,24 +1445,20 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
 
 @supports (-webkit-touch-callout: none) {
   @media (max-width: 700px) {
-    .project-grid {
-      position: relative;
-      isolation: isolate;
-    }
-
-    .project-card {
+    .project-card:nth-child(odd) {
       border-right-color: transparent;
+      z-index: 1;
     }
 
-    .project-grid::before {
+    .project-card:nth-child(odd)::after {
       content: "";
       position: absolute;
-      top: 1px;
-      left: calc(50% - 1px);
-      bottom: 1px;
+      top: -1px;
+      right: -1px;
+      bottom: -1px;
       width: 2px;
       pointer-events: none;
-      z-index: 3;
+      z-index: 2;
       opacity: 0.95;
       background-image: repeating-linear-gradient(
         180deg,
@@ -1474,7 +1470,7 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
       transform: translateZ(0);
     }
 
-    body.night-mode .project-grid::before {
+    body.night-mode .project-card:nth-child(odd)::after {
       background-image: repeating-linear-gradient(
         180deg,
         rgba(214, 214, 214, 0.28) 0 6px,
