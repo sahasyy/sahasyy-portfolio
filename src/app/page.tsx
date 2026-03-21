@@ -176,6 +176,10 @@ const cities = [
   { src: "/city-nyc-opt.png" }, { src: "/city-jerseycity.png" },
   { src: "/city-chicago.png" }, { src: "/city-mumbai.png" }, { src: "/city-dallas.png" },
 ];
+const siteAnnouncement = {
+  href: "https://medium.com/@sahassharma19/designing-myself-how-i-built-a-portfolio-that-actually-feels-like-me-4af22c41f518",
+  text: "just published on medium:",
+};
 const KONAMI_CODE = ["ArrowUp","ArrowUp","ArrowDown","ArrowDown","ArrowLeft","ArrowRight","ArrowLeft","ArrowRight","b","a"];
 
 function getGreeting(): string {
@@ -543,6 +547,7 @@ function getPolaroidLook(key: string): PolaroidLook {
 export default function Home() {
   const [greeting, setGreeting] = useState("");
   const nameRef = useRef<HTMLSpanElement>(null);
+  const announcementRef = useRef<HTMLDivElement>(null);
   const [activeModal, setActiveModal] = useState<ModalData | null>(null);
   const [modalSection, setModalSection] = useState<string>("");
   const openModal = (modal: ModalData, section: string) => { setActiveModal(modal); setModalSection(section); };
@@ -554,6 +559,7 @@ export default function Home() {
   const [nightMode, setNightMode] = useState(false);
   const [showBuildNote, setShowBuildNote] = useState(false);
   const [interactionReady, setInteractionReady] = useState(false);
+  const [announcementHeight, setAnnouncementHeight] = useState(0);
 
   const skylineRef = useRef<HTMLDivElement>(null);
   const footerEndRef = useRef<HTMLDivElement>(null);
@@ -595,6 +601,24 @@ export default function Home() {
       window.removeEventListener("pointerdown", activate);
       window.removeEventListener("keydown", activate);
       window.removeEventListener("scroll", activate);
+    };
+  }, []);
+
+  useEffect(() => {
+    const node = announcementRef.current;
+    if (!node || typeof window === "undefined") return;
+    const updateHeight = () => setAnnouncementHeight(Math.ceil(node.getBoundingClientRect().height));
+    updateHeight();
+    if (typeof ResizeObserver === "undefined") {
+      window.addEventListener("resize", updateHeight);
+      return () => window.removeEventListener("resize", updateHeight);
+    }
+    const observer = new ResizeObserver(() => updateHeight());
+    observer.observe(node);
+    window.addEventListener("resize", updateHeight);
+    return () => {
+      observer.disconnect();
+      window.removeEventListener("resize", updateHeight);
     };
   }, []);
 
@@ -963,7 +987,7 @@ export default function Home() {
     return () => window.removeEventListener("keydown", handleBuildNoteKeys);
   }, [showBuildNote]);
 
-  const scrollTo = (id: string) => { setMenuOpen(false); const section = document.getElementById(id); if (!section) return; const sectionTop = section.getBoundingClientRect().top + window.scrollY; const runwayPadding = parseFloat(getComputedStyle(section).paddingTop) || 114; const targetTop = sectionTop + runwayPadding - 56 - 120; window.scrollTo({ top: Math.max(0, Math.min(targetTop, getMaxScroll())), behavior: "smooth" }); };
+  const scrollTo = (id: string) => { setMenuOpen(false); const section = document.getElementById(id); if (!section) return; const sectionTop = section.getBoundingClientRect().top + window.scrollY; const runwayPadding = parseFloat(getComputedStyle(section).paddingTop) || 114; const targetTop = sectionTop + runwayPadding - 56 - announcementHeight - 120; window.scrollTo({ top: Math.max(0, Math.min(targetTop, getMaxScroll())), behavior: "smooth" }); };
   const showCursor = useCallback((t: string) => {
     const el = cursorLabelRef.current;
     if (!el) return;
@@ -982,7 +1006,7 @@ export default function Home() {
   const handleSectionProgress = useCallback((key: string) => (progress: number) => { setSectionRevealed(prev => { const should = progress > 0.56; if (prev[key] === should) return prev; return { ...prev, [key]: should }; }); }, []);
 
   return (
-    <>
+    <div className="site-shell" style={{ ["--announcement-offset" as string]: `${announcementHeight}px` }}>
       <a href="#about" className="skip-link" onClick={(e) => { e.preventDefault(); scrollTo("about"); }}>Skip to content</a>
 
       <nav className="navbar" role="navigation" aria-label="Main navigation">
@@ -1005,6 +1029,18 @@ export default function Home() {
         <div className="navbar-feather" aria-hidden="true"><div className="navbar-feather-inner" /></div>
         <div className="scroll-progress" aria-hidden="true"><span ref={progressFillRef} className="scroll-progress-fill" /></div>
       </nav>
+
+      <div ref={announcementRef} className="site-banner" role="status" aria-live="polite">
+        <div className="site-banner-inner">
+          <span className="site-banner-dot" aria-hidden="true" />
+          <span className="site-banner-copy">
+            {siteAnnouncement.text}{" "}
+            <a href={siteAnnouncement.href} target="_blank" rel="noopener noreferrer" className="site-banner-link">
+              {siteAnnouncement.href}
+            </a>
+          </span>
+        </div>
+      </div>
 
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`} role="menu" aria-hidden={!menuOpen}>
         <div className="mobile-menu-grid">
@@ -1246,6 +1282,6 @@ export default function Home() {
       <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top">Back to top</button>
 
       <NightMode active={nightMode} />
-    </>
+    </div>
   );
 }
