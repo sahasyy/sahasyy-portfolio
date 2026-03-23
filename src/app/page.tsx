@@ -495,7 +495,7 @@ const humanCards: { emoji: string; label: string; text: string; hoverImage: stri
       title: "Cooking", subtitle: "Tasting flavors from everywhere", image: "/cooking.jpg",
       preloadImages: ["/cooking.jpg"],
       imageClassName: "modal-image-cooking",
-      body: (<p className="modal-body">{"I grew up around incredible food, my mom's cooking, Bombay street food, NYC Pizza, food adventures in Texas. Cooking is how I stay connected to all these places. I love the improvasation to it. There's something deeply satisfying about feeding people something you made."}</p>),
+      body: (<p className="modal-body">{"I grew up around incredible food, my mom's cooking, Bombay street food, NYC Pizza, food adventures in Texas. Cooking is how I stay connected to all these places. I love the improvasation to it. There's something deeply satisfying about feeding people something you made. Follow my food journey on Beli! @sahasyy."}</p>),
       links: [],
     },
   },
@@ -986,6 +986,7 @@ export default function Home() {
 
   const [sectionRevealed, setSectionRevealed] = useState<Record<string, boolean>>({});
   const handleSectionProgress = useCallback((key: string) => (progress: number) => { setSectionRevealed(prev => { const should = progress > 0.56; if (prev[key] === should) return prev; return { ...prev, [key]: should }; }); }, []);
+  const showLandingAnnouncement = showAnnouncement && activeSection === "" && !showBackToTop && !menuOpen;
 
   return (
     <div className="site-shell">
@@ -1012,6 +1013,24 @@ export default function Home() {
         <div className="scroll-progress" aria-hidden="true"><span ref={progressFillRef} className="scroll-progress-fill" /></div>
       </nav>
 
+      {showLandingAnnouncement && (
+        <div className="landing-announcement-shell">
+          <div className="site-banner" role="status" aria-live="polite">
+            <div className="site-banner-inner">
+              <span className="site-banner-copy">
+                {siteAnnouncement.text}{" "}
+                <a href={siteAnnouncement.href} target="_blank" rel="noopener noreferrer" className="site-banner-link">
+                  {siteAnnouncement.linkLabel}
+                </a>
+              </span>
+            </div>
+            <button type="button" className="site-banner-close" aria-label="Dismiss update banner" onClick={() => setShowAnnouncement(false)}>
+              ×
+            </button>
+          </div>
+        </div>
+      )}
+
       <div className={`mobile-menu ${menuOpen ? "open" : ""}`} role="menu" aria-hidden={!menuOpen}>
         <div className="mobile-menu-grid">
           <button role="menuitem" className="mobile-menu-link" onClick={() => scrollTo("experience")}>Experience</button>
@@ -1022,23 +1041,6 @@ export default function Home() {
       </div>
 
       <main id="top">
-        {showAnnouncement && (
-          <div className="landing-announcement-shell">
-            <div className="site-banner" role="status" aria-live="polite">
-              <div className="site-banner-inner">
-                <span className="site-banner-copy">
-                  {siteAnnouncement.text}{" "}
-                  <a href={siteAnnouncement.href} target="_blank" rel="noopener noreferrer" className="site-banner-link">
-                    {siteAnnouncement.linkLabel}
-                  </a>
-                </span>
-              </div>
-              <button type="button" className="site-banner-close" aria-label="Dismiss update banner" onClick={() => setShowAnnouncement(false)}>
-                ×
-              </button>
-            </div>
-          </div>
-        )}
         {/* Hero */}
         <div className="scroll-runway section-hero">
           <div className="sticky-panel">
