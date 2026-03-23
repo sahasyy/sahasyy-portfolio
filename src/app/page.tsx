@@ -244,9 +244,9 @@ interface SpotifyData { isPlaying: boolean; title?: string; artist?: string; url
 
 const experiences: { role: string; prev?: string; org: string; date: string; image: string; modal: ModalData; }[] = [
   {
-    role: "Software Engineer Intern", org: "Colossal Biosciences", date: "January 2026 – Present", image: "/colossal-cover.jpg",
+    role: "Machine Learning Engineer Intern", org: "Colossal Biosciences", date: "January 2026 – Present", image: "/colossal-cover.jpg",
     modal: {
-      title: "Colossal Biosciences", subtitle: "Software Engineer Intern · January 2026 – Present", image: "/colossal-cover.jpg",
+      title: "Colossal Biosciences", subtitle: "Machine Learning Engineer Intern · January 2026 – Present", image: "/colossal-cover.jpg",
       preloadImages: ["/colossal-cover.jpg"],
       body: (
         <>
