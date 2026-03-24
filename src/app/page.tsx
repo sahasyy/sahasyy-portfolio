@@ -87,6 +87,7 @@ function DitheredSkyline({ src, nightMode }: { src: string; nightMode?: boolean 
 function DitheredStill({ src, className, nightMode }: { src: string; className?: string; nightMode?: boolean }) {
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const [shouldRender, setShouldRender] = useState(false);
+  const [isReady, setIsReady] = useState(false);
 
   useEffect(() => {
     const el = canvasRef.current;
@@ -113,6 +114,7 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
     if (!shouldRender) return;
     const canvas = canvasRef.current;
     if (!canvas) return;
+    setIsReady(false);
     const ctx = canvas.getContext("2d");
     if (!ctx) return;
     let timeoutId: number | null = null;
@@ -155,6 +157,7 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
           }
         }
         ctx.putImageData(imageData, 0, 0);
+        setIsReady(true);
       };
       const w = window as Window & { requestIdleCallback?: (cb: IdleRequestCallback, options?: IdleRequestOptions) => number; cancelIdleCallback?: (id: number) => void };
       const isHero = Boolean(className?.includes("hero-seagull"));
@@ -169,7 +172,7 @@ function DitheredStill({ src, className, nightMode }: { src: string; className?:
       if (idleId !== null && w.cancelIdleCallback) w.cancelIdleCallback(idleId);
     };
   }, [src, nightMode, className, shouldRender]);
-  return <canvas ref={canvasRef} className={className} />;
+  return <canvas ref={canvasRef} className={`${className ?? ""}${isReady ? " dither-ready" : ""}`} />;
 }
 
 const cities = [
