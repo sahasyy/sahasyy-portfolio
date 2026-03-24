@@ -1479,10 +1479,10 @@ body.night-mode *:focus-visible { outline-color: #f0a860; }
   .hero-copy { padding-right: 0; }
   .hero-seagull {
     display: block;
-    width: clamp(82px, 22vw, 104px);
-    min-width: 82px;
-    opacity: 0.32;
-    transform: translate(12px, -74px);
+    width: clamp(108px, 28vw, 136px);
+    min-width: 108px;
+    opacity: 0.36;
+    transform: translate(16px, -88px);
   }
   .symbol-banner { height: 52vh; height: 52svh; }
   .scroll-runway { padding: 4.9rem 0; }
