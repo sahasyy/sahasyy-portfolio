@@ -180,7 +180,7 @@ const cities = [
   { src: "/city-chicago.png" }, { src: "/city-mumbai.png" }, { src: "/city-dallas.png" },
 ];
 const siteAnnouncement = {
-  href: "https://medium.com/@sahassharma19/designing-myself-how-i-built-a-portfolio-that-actually-feels-like-me-4af22c41f518",
+  href: "https://medium.com/@sahassharma19/the-future-of-ai-isnt-bigger-models-it-s-better-systems-3feba84bc985",
   text: "just published on medium:",
   linkLabel: "read it here",
 };
