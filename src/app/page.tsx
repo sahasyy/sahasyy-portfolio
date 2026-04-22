@@ -563,6 +563,7 @@ export default function Home() {
   const [showBuildNote, setShowBuildNote] = useState(false);
   const [interactionReady, setInteractionReady] = useState(false);
   const [showAnnouncement, setShowAnnouncement] = useState(true);
+  const [soundOn, setSoundOn] = useState(false);
 
   const skylineRef = useRef<HTMLDivElement>(null);
   const footerEndRef = useRef<HTMLDivElement>(null);
@@ -579,12 +580,31 @@ export default function Home() {
   const activeSectionRef = useRef("");
   const showBackToTopRef = useRef(false);
   const decodedDrawerImagesRef = useRef<Set<string>>(new Set());
+  const audioRef = useRef<HTMLAudioElement | null>(null);
   const [drawerImageReady, setDrawerImageReady] = useState(false);
   const [drawerBodyReady, setDrawerBodyReady] = useState(false);
 
   // Client-only greeting avoids SSR/CSR phrase mismatches and visual stutter.
   useEffect(() => {
     setGreeting(getGreeting());
+  }, []);
+
+  const ensureAudio = useCallback(() => {
+    if (!audioRef.current) {
+      const audio = new Audio("/sahasaudio.mp3");
+      audio.loop = true;
+      audio.preload = "none";
+      audio.volume = 0.72;
+      audioRef.current = audio;
+    }
+    return audioRef.current;
+  }, []);
+
+  useEffect(() => {
+    return () => {
+      audioRef.current?.pause();
+      audioRef.current = null;
+    };
   }, []);
 
   // Delay non-critical warmups until interaction (or a short timeout) to keep first paint smooth.
@@ -984,6 +1004,20 @@ export default function Home() {
     if (!el) return;
     el.classList.remove("visible");
   }, []);
+  const toggleSound = useCallback(async () => {
+    const audio = ensureAudio();
+    if (soundOn) {
+      audio.pause();
+      setSoundOn(false);
+      return;
+    }
+    try {
+      await audio.play();
+      setSoundOn(true);
+    } catch {
+      setSoundOn(false);
+    }
+  }, [ensureAudio, soundOn]);
   const openModalFrom = (modal: ModalData, section: string, e: React.MouseEvent | React.KeyboardEvent) => { drawerTriggerRef.current = e.currentTarget as HTMLElement; openModal(modal, section); };
   const handleCardKey = (e: React.KeyboardEvent, modal: ModalData, section: string) => { if (e.key === "Enter" || e.key === " ") { e.preventDefault(); openModalFrom(modal, section, e); } };
 
@@ -1271,6 +1305,15 @@ export default function Home() {
 
       <div ref={siteCursorRef} className="site-cursor-plus" aria-hidden="true" />
       <div ref={cursorLabelRef} className="cursor-label" aria-hidden="true" />
+      <button
+        type="button"
+        className={`sound-toggle ${soundOn ? "active" : ""}`}
+        onClick={toggleSound}
+        aria-pressed={soundOn}
+        aria-label={soundOn ? "Turn sound off" : "Turn sound on"}
+      >
+        {soundOn ? "Sound on" : "Sound off"}
+      </button>
       <button className={`back-to-top ${showBackToTop ? "visible" : ""}`} onClick={() => window.scrollTo({ top: 0, behavior: "smooth" })} aria-label="Back to top">Back to top</button>
 
       <NightMode active={nightMode} />
