@@ -1,0 +1,23 @@
+<svg width="1600" height="900" viewBox="0 0 1600 900" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1600" height="900" fill="#F3EEE8"/>
+  <rect x="0" y="0" width="1600" height="900" fill="url(#grid)" opacity="0.5"/>
+  <rect x="120" y="132" width="220" height="220" fill="#E20074" opacity="0.08"/>
+  <rect x="364" y="132" width="36" height="220" fill="#E20074" opacity="0.18"/>
+  <rect x="420" y="132" width="36" height="220" fill="#E20074" opacity="0.18"/>
+  <rect x="876" y="180" width="520" height="220" fill="#E20074" opacity="0.08"/>
+  <rect x="968" y="236" width="336" height="108" fill="#E20074" opacity="0.12"/>
+  <rect x="220" y="510" width="1160" height="144" fill="#372E28" opacity="0.05"/>
+  <rect x="220" y="510" width="216" height="144" fill="#E20074" opacity="0.12"/>
+  <rect x="472" y="510" width="12" height="144" fill="#372E28" opacity="0.12"/>
+  <rect x="516" y="510" width="12" height="144" fill="#372E28" opacity="0.12"/>
+  <rect x="980" y="510" width="216" height="144" fill="#E20074" opacity="0.09"/>
+  <rect x="1270" y="96" width="96" height="96" fill="#372E28" opacity="0.06"/>
+  <rect x="1310" y="136" width="16" height="16" fill="#372E28" opacity="0.2"/>
+  <rect x="150" y="712" width="1300" height="24" fill="#372E28" opacity="0.06"/>
+  <rect x="150" y="744" width="1040" height="12" fill="#372E28" opacity="0.05"/>
+  <defs>
+    <pattern id="grid" width="8" height="8" patternUnits="userSpaceOnUse">
+      <rect x="0" y="0" width="2" height="2" fill="#C9BEB2"/>
+    </pattern>
+  </defs>
+</svg>

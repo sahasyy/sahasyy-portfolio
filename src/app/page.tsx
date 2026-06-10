@@ -247,6 +247,20 @@ interface SpotifyData { isPlaying: boolean; title?: string; artist?: string; url
 
 const experiences: { role: string; prev?: string; org: string; date: string; image: string; modal: ModalData; }[] = [
   {
+    role: "Machine Learning Engineer Intern", org: "T-Mobile", date: "May 2026 – Present", image: "/tmobile-experience.svg",
+    modal: {
+      title: "T-Mobile", subtitle: "Machine Learning Engineer Intern · Core Billing Platform and Operations · May 2026 – Present", image: "/tmobile-experience.svg",
+      preloadImages: ["/tmobile-experience.svg"],
+      body: (
+        <>
+          <p className="modal-body">Working as a Machine Learning Engineer Intern on T-Mobile&apos;s Core Billing Platform and Operations team this summer.</p>
+          <p className="modal-body">Focused on machine learning work connected to billing-platform and operational workflows, while learning how large-scale internal systems are built, maintained, and supported in production.</p>
+        </>
+      ),
+      links: [{ label: "T-Mobile", url: "https://www.t-mobile.com" }],
+    },
+  },
+  {
     role: "Machine Learning Engineer Intern", org: "Colossal Biosciences", date: "January 2026 – Present", image: "/colossal-cover.jpg",
     modal: {
       title: "Colossal Biosciences", subtitle: "Machine Learning Engineer Intern · January 2026 – Present", image: "/colossal-cover.jpg",
