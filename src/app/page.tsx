@@ -254,7 +254,11 @@ const experiences: { role: string; prev?: string; org: string; date: string; ima
       body: (
         <>
           <p className="modal-body">Working as a Machine Learning Engineer Intern on T-Mobile&apos;s Core Billing Platform and Operations team this summer.</p>
-          <p className="modal-body">Focused on machine learning work connected to billing-platform and operational workflows, while learning how large-scale internal systems are built, maintained, and supported in production.</p>
+          <p className="modal-body">
+            {"Focused on machine learning work connected to billing-platform and operational workflows, while learning how large-scale internal systems are built, maintained, and supported in production. I&apos;m also documenting the experience at "}
+            <a href="https://tmobile.sahassharma.com" target="_blank" rel="noopener noreferrer" className="modal-inline-link">tmobile.sahassharma.com</a>
+            {"."}
+          </p>
         </>
       ),
       links: [{ label: "T-Mobile", url: "https://www.t-mobile.com" }],
